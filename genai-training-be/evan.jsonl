@@ -1,0 +1,3 @@
+{"input": "Book a flight to Paris", "expected_intent": "booking"}
+{"input": "What's the weather?", "expected_intent": "weather"}
+{"input": "Cancel my order", "expected_intent": "cancel"}
