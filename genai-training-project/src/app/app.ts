@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
 })
 export class App {
   prompt = '';

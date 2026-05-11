@@ -1,5 +1,11 @@
 .container {
-  max-width: 600px;
+  max-width: 99%;
   margin: 40px auto;
   font-family: Arial;
+}
+
+.text-area {
+  width: -webkit-fill-available;
+  margin: 0px;
+  padding: 10px;
 }
