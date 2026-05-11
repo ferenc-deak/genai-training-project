@@ -30,30 +30,73 @@ class PromptRequest(BaseModel):
 def generate_agent(prompt: str):
 
     structured_prompt = f"""
-You are a strict incident severity classifier.
+ROLE:
+You are a STRICT routing classifier for a support system.
 
-You MUST choose ONLY ONE label:
+You MUST decide exactly ONE category:
 
-- high = system is broken, downtime, data loss, production outage
-- medium = partial functionality broken, degraded performance
-- low = cosmetic issues, typos, minor UI issues
+-------------------------
+CATEGORIES
+-------------------------
 
-Return ONLY valid JSON:
+1. INCIDENT
+Definition:
+A system failure, bug, outage, error, or performance degradation.
 
+Examples:
+- API is down
+- login not working
+- server returns 500
+- database is slow
+- app crashed
+
+2. QUESTION
+Definition:
+A request for information, explanation, or learning.
+
+Examples:
+- What is REST API?
+- How does caching work?
+- Explain React hooks
+
+-------------------------
+DECISION RULES (VERY IMPORTANT)
+-------------------------
+
+- If the user reports a problem → INCIDENT
+- If the user asks "what / how / why" → QUESTION
+- If both appear → INCIDENT has HIGHER priority
+
+-------------------------
+OUTPUT RULES (CRITICAL)
+-------------------------
+
+- Output ONLY valid JSON
+- NO markdown
+- NO backticks
+- NO explanations
+- NO extra keys
+- MUST be parseable by json.loads()
+
+-------------------------
+OUTPUT SCHEMAS
+-------------------------
+
+If INCIDENT:
 {{
+  "type": "incident",
   "action": "high | medium | low",
-  "summary": "short explanation"
+  "summary": "short incident description"
 }}
 
-CRITICAL RULES:
-- DO NOT default to low
-- You MUST choose based on severity rules above
-- If system is down or broken → high
-- If functionality partially broken → medium
-- If cosmetic issue → low
+If QUESTION:
+{{
+  "type": "question",
+  "answer": "clear and concise explanation"
+}}
 
-
-Task:
+-------------------------
+INPUT:
 {prompt}
 """
 
