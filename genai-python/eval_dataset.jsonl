@@ -1,0 +1,3 @@
+{"input":"Login system is broken","expected":"high"}
+{"input":"UI typo on homepage","expected":"low"}
+{"input":"Database is down","expected":"high"}
