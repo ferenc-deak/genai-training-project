@@ -67,6 +67,10 @@ DECISION RULES (VERY IMPORTANT)
 - If the user asks "what / how / why" → QUESTION
 - If both appear → INCIDENT has HIGHER priority
 
+- If user says "hello", greet them politely.
+- If user reports a system problem, classify it as INCIDENT.
+- Otherwise answer normally.
+
 -------------------------
 OUTPUT RULES (CRITICAL)
 -------------------------
@@ -74,8 +78,9 @@ OUTPUT RULES (CRITICAL)
 - Output ONLY valid JSON
 - NO markdown
 - NO backticks
-- NO explanations
 - NO extra keys
+- Detailed summary is REQUIRED for INCIDENT
+- Detailed explanation is REQUIRED for QUESTION
 - MUST be parseable by json.loads()
 
 -------------------------
