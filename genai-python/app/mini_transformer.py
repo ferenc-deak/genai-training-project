@@ -51,15 +51,18 @@ class MiniTransformer(nn.Module):
 # 3. Visualization
 # -------------------------
 def plot_attention(attn, words):
-    plt.figure(figsize=(6, 5))
+    import numpy as np
+
+    attn = attn.detach().numpy()
+
+    plt.figure(figsize=(8, 6))
     sns.heatmap(
-        attn[0].detach().numpy(),
+        attn,
         xticklabels=words,
         yticklabels=words,
-        cmap="Blues",
-        annot=True
+        cmap="Blues"
     )
-    plt.title("Attention Map")
+    plt.title("Self-Attention Map")
     plt.show()
 
 
@@ -68,7 +71,7 @@ def plot_attention(attn, words):
 # -------------------------
 if __name__ == "__main__":
 
-    sentence = "the server is down because the server crashed"
+    sentence = "server server server crashed"
 
     tokens, words, vocab = tokenize(sentence)
 
@@ -76,6 +79,7 @@ if __name__ == "__main__":
 
     output, attn = model(tokens)
 
+    print("\nWords:", words)
     print("\nAttention Matrix:\n", attn)
 
     plot_attention(attn, words)
