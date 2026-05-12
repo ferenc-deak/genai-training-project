@@ -31,81 +31,24 @@ class PromptRequest(BaseModel):
 def generate_agent(prompt: str):
 
     structured_prompt = f"""
+
 ROLE:
-You are a STRICT routing classifier for a support system.
+You are a helpful assistant.
 
-You MUST decide exactly ONE category:
+TASK:
+Answer the user clearly and concisely.
 
--------------------------
-CATEGORIES
--------------------------
+RULES:
+- Return ONLY plain text
+- No JSON
+- No keys like type, answer, summary
+- No formatting
+- No markdown
+- No explanations about the rules
 
-1. INCIDENT
-Definition:
-A system failure, bug, outage, error, or performance degradation.
-
-Examples:
-- API is down
-- login not working
-- server returns 500
-- database is slow
-- app crashed
-
-2. QUESTION
-Definition:
-A request for information, explanation, or learning.
-
-Examples:
-- What is REST API?
-- How does caching work?
-- Explain React hooks
-
--------------------------
-DECISION RULES (VERY IMPORTANT)
--------------------------
-
-- If the user reports a problem → INCIDENT
-- If the user asks "what / how / why" → QUESTION
-- If both appear → INCIDENT has HIGHER priority
-
-- If user says "hello", greet them politely.
-- If user reports a system problem, classify it as INCIDENT.
-- Otherwise answer normally.
-
--------------------------
-OUTPUT RULES (CRITICAL)
--------------------------
-
-- Output ONLY valid JSON
-- NO markdown
-- NO backticks
-- NO extra keys
-- Detailed summary is REQUIRED for INCIDENT
-- Detailed explanation is REQUIRED for QUESTION
-- MUST be parseable by json.loads()
-
--------------------------
-OUTPUT SCHEMAS
--------------------------
-
-If INCIDENT:
-{{
-  "type": "incident",
-  "action": "high | medium | low",
-  "summary": "short incident description"
-}}
-
-If QUESTION:
-{{
-  "type": "question",
-  "answer": "clear and concise explanation"
-}}
-
--------------------------
 INPUT:
 {prompt}
 """
-
     response = client.chat.completions.create(
         model="meta-llama/Llama-3.1-8B-Instruct",
         messages=[{"role": "user", "content": structured_prompt}],
@@ -122,34 +65,8 @@ def chat(req: PromptRequest):
     try:
         result = generate_agent(req.prompt)
 
-        # 1. clean markdown if model returns ```json ... ```
-        cleaned = re.sub(r"```json|```", "", result).strip()
-
-        # 2. try JSON parsing
-        try:
-            parsed = json.loads(cleaned)
-
-            message = (
-                parsed.get("message")
-                or parsed.get("summary")
-                or parsed.get("answer")
-            )
-
-            if message:
-                return {"response": message}
-
-        except json.JSONDecodeError:
-            pass
-
-        # 3. if not JSON → still try to extract meaningful text safely
-        match = re.search(r'"?(message|summary|answer)"?\s*:\s*"?(.+?)"?$', cleaned)
-
-        if match:
-            return {"response": match.group(2)}
-
-        # 4. final fallback (clean text only)
-        return {"response": cleaned}
+        return {"response": result.strip()}
 
     except Exception as e:
         print("ERROR:", e)
-        return {"response": "Server error"}
+        return {"response": ""}
