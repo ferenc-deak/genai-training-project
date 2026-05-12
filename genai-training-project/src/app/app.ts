@@ -28,6 +28,7 @@ export class App {
       .subscribe({
         next: (res) => {
           this.response = res.response;
+          console.log(res);
           this.loading = false;
         },
         error: () => {
