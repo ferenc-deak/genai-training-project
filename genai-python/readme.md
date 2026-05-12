@@ -5,7 +5,7 @@
 3. How to test reproducibility
    python repro_steps.py
 
-Baseline Engineering Setup
+## Baseline Engineering Setup
 
 1. I did a Deterministic LLM classifier:
    response = client.chat.completions.create(
@@ -33,3 +33,39 @@ output = generate_agent(sample["input"])
    a. repeating the same request
    b. showing identical outputs
    c. proving deterministic behavior
+
+## 🧠 Transformer Learning Module (Experimental)
+
+This project includes a small experimental module to help understand how Transformers work internally, especially the attention mechanism.
+
+It is NOT a production model. It is purely for learning and visualization purposes.
+
+---
+
+## 📌 Goals
+
+- Explore a minimal self-attention mechanism (Transformer concept)
+- Visualize how attention is distributed between words
+- Modify input sentences and observe how attention changes
+
+---
+
+## ⚙️ How it works
+
+The module simulates a simplified Transformer attention mechanism:
+
+- Each word is converted into a vector representation
+- Query (Q), Key (K), and Value (V) matrices are computed
+- Attention scores are calculated using dot-product similarity
+- Softmax is applied to normalize attention weights
+- The attention matrix shows how each word influences others
+
+---
+
+## ▶️ How to run the demo
+
+Run the attention visualization script:
+
+```bash
+python app/attention_demo.py
+```

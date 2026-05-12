@@ -1,4 +1,5 @@
 import json
+import re
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -118,17 +119,37 @@ INPUT:
 # API endpoint
 @app.post("/chat")
 def chat(req: PromptRequest):
+    try:
+        result = generate_agent(req.prompt)
 
-    result = generate_agent(req.prompt)
+        # 1. clean markdown if model returns ```json ... ```
+        cleaned = re.sub(r"```json|```", "", result).strip()
 
-    parsed = json.loads(result)
+        # 2. try JSON parsing
+        try:
+            parsed = json.loads(cleaned)
 
-    message = (
-        parsed.get("message")
-        or parsed.get("summary")
-        or parsed.get("answer")
-    )
+            message = (
+                parsed.get("message")
+                or parsed.get("summary")
+                or parsed.get("answer")
+            )
 
-    return {
-        "response": message
-    }
+            if message:
+                return {"response": message}
+
+        except json.JSONDecodeError:
+            pass
+
+        # 3. if not JSON → still try to extract meaningful text safely
+        match = re.search(r'"?(message|summary|answer)"?\s*:\s*"?(.+?)"?$', cleaned)
+
+        if match:
+            return {"response": match.group(2)}
+
+        # 4. final fallback (clean text only)
+        return {"response": cleaned}
+
+    except Exception as e:
+        print("ERROR:", e)
+        return {"response": "Server error"}
