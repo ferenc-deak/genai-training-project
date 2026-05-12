@@ -69,3 +69,36 @@ Run the attention visualization script:
 ```bash
 python app/attention_demo.py
 ```
+
+# 🧠 Minimal Transformer + Attention Visualization
+
+This project implements a **minimal Transformer model from scratch using PyTorch**.  
+It is designed for learning and understanding how **self-attention works internally** in modern AI models like GPT.
+
+The goal is not performance, but **visual explanation and experimentation**.
+
+---
+
+# 🚀 Features
+
+- Minimal self-attention mechanism (Query, Key, Value)
+- Simple tokenization of input sentences
+- Attention matrix computation
+- Visualization of attention maps using heatmaps
+- Ability to modify inputs and observe behavior changes
+
+---
+
+# 📦 Tech Stack
+
+- Python 3.12
+- PyTorch
+- Matplotlib
+- Seaborn
+
+I demonstrated:
+
+✔ Transformer mechanics
+✔ Attention computation
+✔ Context sensitivity
+✔ Visualization of internal weights
