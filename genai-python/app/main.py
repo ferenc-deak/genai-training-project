@@ -118,5 +118,17 @@ INPUT:
 # API endpoint
 @app.post("/chat")
 def chat(req: PromptRequest):
+
     result = generate_agent(req.prompt)
-    return {"response": result}
+
+    parsed = json.loads(result)
+
+    message = (
+        parsed.get("message")
+        or parsed.get("summary")
+        or parsed.get("answer")
+    )
+
+    return {
+        "response": message
+    }
