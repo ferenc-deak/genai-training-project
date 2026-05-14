@@ -1,5 +1,5 @@
 1. How to run API
-   uvicorn app.main:app --reload
+   python -m uvicorn app.main:app --reload
 2. How to run evaluation
    python evaluate.py
 3. How to test reproducibility
@@ -102,3 +102,69 @@ I demonstrated:
 ✔ Attention computation
 ✔ Context sensitivity
 ✔ Visualization of internal weights
+
+# RAG System (Retrieval-Augmented Generation)
+
+This project implements a **Retrieval-Augmented Generation (RAG)** system that allows users to ask questions over a custom set of documents and receive AI-generated answers grounded in those documents.
+
+---
+
+## 🧠 What is RAG?
+
+RAG (Retrieval-Augmented Generation) is an architecture that combines:
+
+- **Information retrieval** (searching relevant document chunks)
+- **Large Language Models (LLMs)** (generating natural language answers)
+
+Instead of relying only on model training data, the system retrieves relevant information from external documents at query time and uses it to generate accurate answers.
+
+---
+
+## ⚙️ How it works
+
+The system follows this pipeline:
+
+1. User sends a question
+2. Question is converted into an embedding
+3. System searches similar document chunks from a vector database
+4. Most relevant chunks are retrieved
+5. Retrieved context is passed to an LLM
+6. LLM generates an answer based only on that context
+
+---
+
+## 🏗️ Architecture
+
+---
+
+## 📁 Project Structure
+
+```
+
+rag-project/
+│
+├── app/
+│   ├── main.py          # FastAPI entry point
+│   ├── rag.py           # Core RAG logic
+│   ├── ingest.py        # Document ingestion & embedding
+│   ├── retriever.py     # Vector search logic
+│
+├── data/
+│   └── docs/            # Source documents
+│
+├── vectorstore/         # Stored embeddings
+├── tests/               # Evaluation & regression tests
+├── requirements.txt
+└── dockerfile
+```
+
+Steps:
+
+You upload or store your documents (PDFs, notes, DB content, etc.)
+The system splits them into small text chunks
+Each chunk is converted into a vector (embedding)
+When you ask a question:
+your query is also converted into a vector
+the system finds the most similar chunks
+Those chunks are sent to the AI (OpenAI / Hugging Face)
+The AI answers using only that context
