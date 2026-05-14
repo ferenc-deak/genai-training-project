@@ -1,6 +1,6 @@
 import os
 from huggingface_hub import InferenceClient
-from retriever import get_retriever
+from app.rag.retriever import get_retriever
 
 client = InferenceClient(
     api_key=os.getenv("HF_TOKEN")
@@ -32,7 +32,7 @@ CONTEXT:
 QUESTION:
 {question}
 
-If the answer is not in the context, say "I don't know".
+ANSWER
 """
 
     response = client.chat.completions.create(
