@@ -28,11 +28,30 @@ export class App {
       .subscribe({
         next: (res) => {
           this.response = res.response;
-          console.log(res);
           this.loading = false;
         },
         error: () => {
-          this.response = 'Error calling AI';
+          this.response = 'Error calling chat';
+          this.loading = false;
+        },
+      });
+  }
+
+  sendRAG() {
+    this.loading = true;
+    this.response = '';
+
+    this.http
+      .post<any>('http://127.0.0.1:8000/ask', {
+        question: this.prompt, // ✅ FIXED
+      })
+      .subscribe({
+        next: (res) => {
+          this.response = res.answer || res.response;
+          this.loading = false;
+        },
+        error: () => {
+          this.response = 'Error calling RAG';
           this.loading = false;
         },
       });
