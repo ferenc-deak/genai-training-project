@@ -26,6 +26,9 @@ client = InferenceClient(
 class PromptRequest(BaseModel):
     prompt: str
 
+class RAGRequest(BaseModel):
+    text: str
+
 
 # AI function
 def generate_agent(prompt: str):
@@ -70,3 +73,10 @@ def chat(req: PromptRequest):
     except Exception as e:
         print("ERROR:", e)
         return {"response": ""}
+    
+
+
+
+@app.post("/ask")
+def ask(req: RAGRequest):
+    return ask_question(req.text)
