@@ -43,7 +43,7 @@ export class App {
 
     this.http
       .post<any>('http://127.0.0.1:8000/ask', {
-        question: this.prompt, // ✅ FIXED
+        question: this.prompt,
       })
       .subscribe({
         next: (res) => {
