@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.chat import generate_agent
-from app.rag.rag import ask_question
+from app.rag.rag import ask_question   # ONLY this
 
 app = FastAPI()
 
@@ -18,13 +18,16 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     prompt: str
 
+
 @app.post("/chat")
 def chat(req: ChatRequest):
     return {"response": generate_agent(req.prompt)}
 
+
 # ---------------- RAG ----------------
 class RAGRequest(BaseModel):
     question: str
+
 
 @app.post("/ask")
 def ask(req: RAGRequest):
