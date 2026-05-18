@@ -5,16 +5,23 @@
 
   <br /><br />
 
-  <button (click)="send()" [disabled]="loading || !prompt">Chat</button>
-
-  <button (click)="sendRAG()" [disabled]="loading || !prompt">RAG</button>
+  <button (click)="combineBothAPICall()" [disabled]="loading || !prompt">
+    Send
+  </button>
 
   <hr />
 
-  @if (response) {
+  @if (ragResponse) {
     <div>
-      <h3>Response:</h3>
-      <p>{{ response }}</p>
+      <h3>📚 RAG Response:</h3>
+      <p>{{ ragResponse }}</p>
+    </div>
+  }
+
+  @if (aiResponse) {
+    <div>
+      <h3>🤖 AI Response:</h3>
+      <p>{{ aiResponse }}</p>
     </div>
   }
 </div>
