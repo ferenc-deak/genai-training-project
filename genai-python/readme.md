@@ -1,11 +1,13 @@
 1. How to run API
-   python -m uvicorn app.main:app --reload
-2. How to run evaluation
+   Activate in git bash:
+   source venv/Scripts/activate
+2. python -m uvicorn app.main:app --reload
+3. How to run evaluation
    python evaluate.py
-3. How to test reproducibility
+4. How to test reproducibility
    python repro_steps.py
 
-## Baseline Engineering Setup
+## 🧠 Baseline Engineering Setup
 
 1. I did a Deterministic LLM classifier:
    response = client.chat.completions.create(
@@ -168,3 +170,33 @@ your query is also converted into a vector
 the system finds the most similar chunks
 Those chunks are sent to the AI (OpenAI / Hugging Face)
 The AI answers using only that context
+
+## 🧠 Fine-Tuning & Adaptation
+
+1. I created a dataset.jsonl file
+
+2. I opened Open Google Colab
+
+3. Upload your dataset - dataset.jsonl
+
+4. Loaded dataset
+
+5. Installed confirmed libraries and extensions: !pip install -q transformers datasets peft accelerate bitsandbytes
+
+6. Loaded the model:
+
+   from transformers import AutoTokenizer, AutoModelForCausalLM
+
+   model_name = "microsoft/phi-3-mini-4k-instruct"
+
+   tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+   model = AutoModelForCausalLM.from_pretrained(
+   model_name,
+   device_map="auto"
+   )
+
+7. Tokenizer - tokenizer = AutoTokenizer.from_pretrained(...)
+   Converts text → numbers (tokens)
+   Converts numbers → text
+   This is just translation, not intelligence

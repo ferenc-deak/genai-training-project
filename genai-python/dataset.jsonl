@@ -1,0 +1,53 @@
+{"instruction": "What is RAG?", "output": "RAG (Retrieval-Augmented Generation) combines document retrieval with LLM generation to produce more accurate and grounded answers."}
+{"instruction": "What is fine-tuning?", "output": "Fine-tuning is the process of training a pre-trained model on a specific dataset to adapt it to a task or domain."}
+{"instruction": "What is LoRA?", "output": "LoRA is a parameter-efficient fine-tuning method that trains small adapter layers instead of updating the full model."}
+{"instruction": "What is an LLM?", "output": "An LLM is a large language model trained on massive text data to generate human-like responses."}
+{"instruction": "What is an embedding?", "output": "An embedding is a numerical vector representation of text used to measure semantic similarity."}
+
+{"instruction": "What is a vector database?", "output": "A vector database stores embeddings and enables fast similarity search for RAG systems."}
+{"instruction": "What is REST API?", "output": "REST API is a web architecture style that uses HTTP methods like GET, POST, PUT, and DELETE."}
+{"instruction": "What is JSON?", "output": "JSON is a lightweight data format used to exchange structured data between systems."}
+{"instruction": "What is FastAPI?", "output": "FastAPI is a Python framework for building fast and modern APIs."}
+{"instruction": "What is Angular?", "output": "Angular is a frontend framework for building single-page web applications."}
+
+{"instruction": "What is Angular signal?", "output": "Angular signals are reactive primitives used for managing state in Angular applications."}
+{"instruction": "What is dependency injection?", "output": "Dependency injection is a design pattern where dependencies are provided instead of created inside a class."}
+{"instruction": "What is RxJS?", "output": "RxJS is a library for reactive programming using observables in JavaScript and Angular."}
+{"instruction": "What is a component in Angular?", "output": "A component is a reusable UI block that includes HTML, CSS, and logic."}
+{"instruction": "What is Angular routing?", "output": "Angular routing allows navigation between different views in a single-page application."}
+
+{"instruction": "What is a microservice?", "output": "A microservice is a small independent service that handles a specific function in a system architecture."}
+{"instruction": "What is Docker?", "output": "Docker is a platform for containerizing applications to ensure consistency across environments."}
+{"instruction": "What is Kubernetes?", "output": "Kubernetes is a system for automating deployment and scaling of containerized applications."}
+{"instruction": "What is CI/CD?", "output": "CI/CD is a software development practice for continuous integration and continuous delivery."}
+{"instruction": "What is Git?", "output": "Git is a version control system used to track code changes."}
+
+{"instruction": "What is hallucination in AI?", "output": "Hallucination occurs when an AI model generates incorrect or made-up information."}
+{"instruction": "How does RAG reduce hallucination?", "output": "RAG reduces hallucination by grounding responses in retrieved documents instead of model memory."}
+{"instruction": "What is prompt engineering?", "output": "Prompt engineering is the process of designing inputs to guide AI model outputs."}
+{"instruction": "What is context window?", "output": "Context window is the maximum amount of text a model can process at once."}
+{"instruction": "What is token in LLM?", "output": "A token is a piece of text (word or subword) used by language models for processing."}
+
+{"instruction": "What is semantic search?", "output": "Semantic search finds results based on meaning rather than exact keyword matching."}
+{"instruction": "What is similarity search?", "output": "Similarity search finds items closest to a query based on vector distance."}
+{"instruction": "What is cosine similarity?", "output": "Cosine similarity measures the angle between two vectors to determine similarity."}
+{"instruction": "What is FAISS?", "output": "FAISS is a library for efficient similarity search of embeddings."}
+{"instruction": "What is chunking in RAG?", "output": "Chunking is splitting documents into smaller parts for better retrieval in RAG systems."}
+
+{"instruction": "What is temperature in LLM?", "output": "Temperature controls randomness in model outputs; higher values produce more creative responses."}
+{"instruction": "What is top-p sampling?", "output": "Top-p sampling selects tokens based on cumulative probability to control randomness."}
+{"instruction": "What is zero-shot learning?", "output": "Zero-shot learning is when a model performs a task without specific training examples."}
+{"instruction": "What is few-shot learning?", "output": "Few-shot learning uses a small number of examples to guide model output."}
+{"instruction": "What is instruction tuning?", "output": "Instruction tuning trains models to follow natural language instructions."}
+
+{"instruction": "What is overfitting?", "output": "Overfitting happens when a model learns training data too well and fails to generalize."}
+{"instruction": "What is underfitting?", "output": "Underfitting happens when a model fails to learn patterns from data."}
+{"instruction": "What is supervised learning?", "output": "Supervised learning trains models using labeled input-output pairs."}
+{"instruction": "What is unsupervised learning?", "output": "Unsupervised learning finds patterns in data without labeled outputs."}
+{"instruction": "What is reinforcement learning?", "output": "Reinforcement learning trains models using rewards and penalties based on actions."}
+
+{"instruction": "What is latency in APIs?", "output": "Latency is the time delay between a request and a response in a system."}
+{"instruction": "What is scalability?", "output": "Scalability is the ability of a system to handle increased load efficiently."}
+{"instruction": "What is caching?", "output": "Caching stores frequently used data for faster access."}
+{"instruction": "What is authentication?", "output": "Authentication is the process of verifying a user's identity."}
+{"instruction": "What is authorization?", "output": "Authorization determines what actions a user is allowed to perform."}

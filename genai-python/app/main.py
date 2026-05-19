@@ -31,4 +31,31 @@ class RAGRequest(BaseModel):
 
 @app.post("/ask")
 def ask(req: RAGRequest):
-    return ask_question(req.question)
+    question = req.question
+
+    # 1. Get RAG result
+    rag_result = ask_question(question)
+
+    # make sure you return structured data from RAG
+    rag_answer = rag_result.get("answer", "")
+    rag_score = rag_result.get("score", 0)
+
+    # 2. Get AI answer
+    ai_answer = generate_agent(question)
+
+    # optional: simple AI scoring heuristic
+    ai_score = len(ai_answer) / 1000  # VERY simple baseline
+
+    # 3. Decision logic
+    if rag_score > ai_score and rag_answer.strip():
+        return {
+            "answer": rag_answer,
+            "source": "rag",
+            "score": rag_score
+        }
+
+    return {
+        "answer": ai_answer,
+        "source": "ai",
+        "score": ai_score
+    }
