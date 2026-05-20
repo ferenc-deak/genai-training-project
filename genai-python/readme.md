@@ -200,3 +200,82 @@ The AI answers using only that context
    Converts text → numbers (tokens)
    Converts numbers → text
    This is just translation, not intelligence
+
+   We built in Google Colab is basically a mini AI training pipeline.
+   The objective was: Load a pretrained LLM → give it your custom dataset → fine-tune it with LoRA so it learns your own knowledge/style.
+
+   In the lora_finetune.py - are the steps of a training script that tells the computer HOW to fine-tune a model using LoRA
+
+# Prompting vs RAG vs Fine-Tuning vs Hybrid Systems
+
+In modern GenAI systems, there are four main approaches to adapting large language models: prompting, retrieval-augmented generation (RAG), fine-tuning, and hybrid systems. Each method represents a different way of controlling model behavior, knowledge access, and system reliability.
+
+1.  Prompting
+
+Prompting is the simplest approach where the model is guided only through input instructions (prompts) at runtime. No changes are made to the model itself.
+
+It relies entirely on the model’s built-in knowledge and the clarity of the instructions provided. Prompting is easy to implement and requires no additional infrastructure.
+
+However, it is limited because it cannot access external or updated information and may produce inconsistent or incorrect outputs.
+
+Best use cases: prototypes, chatbots, formatting tasks, simple assistants.
+
+2.  RAG (Retrieval-Augmented Generation)
+
+RAG improves LLM responses by adding an external knowledge retrieval step. Before generating an answer, the system searches a document store (often using embeddings) and provides relevant context to the model.
+
+This makes the model more accurate and allows it to use up-to-date or private data without retraining.
+
+The main challenge is ensuring good retrieval quality, since the final output depends heavily on the relevance of the retrieved documents.
+
+Best use cases: document Q&A, enterprise knowledge bases, support systems.
+
+3.  Fine-Tuning
+
+Fine-tuning modifies the internal weights of a model using domain-specific training data. Instead of providing knowledge at runtime, the model learns patterns, behavior, or domain expertise during training.
+
+This approach is useful when consistent behavior, style, or structured output is required.
+
+However, it is expensive, harder to maintain, and does not easily adapt to new information unless retrained.
+
+Best use cases: domain-specific assistants, classification tasks, structured outputs.
+
+4.  Hybrid Systems
+
+Hybrid systems combine multiple approaches—typically prompting, RAG, and fine-tuning—to achieve production-grade performance.
+
+In these systems:
+
+RAG provides external knowledge
+Fine-tuning shapes model behavior
+Prompting controls runtime instructions
+
+This layered approach provides the best balance of accuracy, flexibility, and control, but it is also the most complex to design and maintain.
+
+Best use cases: production AI products, enterprise systems, advanced assistants.
+
+This the link to the Lora Fine tune in google console (lora-finetune.ipynb): https://colab.research.google.com/drive/1Db8HL098rW8cX4ujp5qx3bBDWQOwGrzW?usp=sharing
+
+1. Prompting:
+   a. Performance: Fastest,
+   b. Complexity: Lowest,
+   c. Cost: Low,
+   d. Key Strength: Simplicity
+
+2. RAG:
+   a. Performance: Medium,
+   b. Complexity: High,
+   c. Cost: Medium,
+   d. Key Strength: Fresh + factual answers
+
+3. Fine-tuning:
+   a. Performance: Fastest,
+   b. Complexity: High,
+   c. Cost: High (train), Low (run)
+   d. Key Strength: Consistent behavior
+
+4. Hybrid:
+   a. Performance: Slowest
+   b. Complexity: Highest
+   c. Cost: Highest
+   d. Key Strength: Best overall quality
