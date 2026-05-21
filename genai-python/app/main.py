@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from app.mcp.server import mcp
 
 from app.chat import generate_agent
 from app.rag.rag import ask_question   # ONLY this
@@ -59,3 +60,6 @@ def ask(req: RAGRequest):
         "source": "ai",
         "score": ai_score
     }
+
+if __name__ == "__main__":
+    mcp.run()

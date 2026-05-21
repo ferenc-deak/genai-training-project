@@ -105,7 +105,7 @@ I demonstrated:
 ✔ Context sensitivity
 ✔ Visualization of internal weights
 
-# RAG System (Retrieval-Augmented Generation)
+## RAG System (Retrieval-Augmented Generation)
 
 This project implements a **Retrieval-Augmented Generation (RAG)** system that allows users to ask questions over a custom set of documents and receive AI-generated answers grounded in those documents.
 
@@ -206,7 +206,7 @@ The AI answers using only that context
 
    In the lora_finetune.py - are the steps of a training script that tells the computer HOW to fine-tune a model using LoRA
 
-# Prompting vs RAG vs Fine-Tuning vs Hybrid Systems
+## Prompting vs RAG vs Fine-Tuning vs Hybrid Systems
 
 In modern GenAI systems, there are four main approaches to adapting large language models: prompting, retrieval-augmented generation (RAG), fine-tuning, and hybrid systems. Each method represents a different way of controlling model behavior, knowledge access, and system reliability.
 
@@ -279,3 +279,25 @@ This the link to the Lora Fine tune in google console (lora-finetune.ipynb): htt
    b. Complexity: Highest
    c. Cost: Highest
    d. Key Strength: Best overall quality
+
+## Tool Calling & MCP
+
+# Run server
+
+python -m app.main
+
+# Run tests
+
+pytest
+
+# Tools
+
+- add(a, b)
+- divide(a, b)
+- get_user(user_id)
+
+# Rules
+
+- No silent failures
+- All inputs validated with Pydantic
+- Errors return structured response with isError
