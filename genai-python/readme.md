@@ -282,6 +282,8 @@ This the link to the Lora Fine tune in google console (lora-finetune.ipynb): htt
 
 ## Tool Calling & MCP
 
+- The AI chooses the tool, and the MCP server executes it.
+
 # Run server
 
 python -m app.main
@@ -301,3 +303,21 @@ pytest
 - No silent failures
 - All inputs validated with Pydantic
 - Errors return structured response with isError
+
+so these are the steps:
+
+1.  User asks a question
+    ↓
+2.  AI decides: “I should use tool X”
+    ↓
+3.  AI sends request: tool + arguments
+    ↓
+4.  MCP server receives request
+    ↓
+5.  MCP runs your Python function (tool)
+    ↓
+6.  Tool returns result
+    ↓
+7.  MCP sends result back to AI
+    ↓
+8.  AI formats final answer for user
