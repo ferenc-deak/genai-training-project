@@ -10,7 +10,15 @@
 
   <br /><br />
 
-  <button (click)="combineBothAPICall()" [disabled]="loading || !prompt">
+  <button
+    class="send-btn"
+    [ngClass]="{
+      'active-btn': prompt && !loading,
+      'disabled-btn': loading || !prompt,
+    }"
+    (click)="combineBothAPICall()"
+    [disabled]="loading || !prompt"
+  >
     Send
   </button>
 
