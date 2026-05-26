@@ -5,8 +5,11 @@ from app.mcp.server import mcp
 
 from app.chat import generate_agent
 from app.rag.rag import ask_question   # ONLY this
+from app.workflow.workflow import WorkflowEngine
 
 app = FastAPI()
+
+engine = WorkflowEngine(use_external=True)
 
 app.add_middleware(
     CORSMiddleware,
@@ -63,3 +66,8 @@ def ask(req: RAGRequest):
 
 if __name__ == "__main__":
     mcp.run()
+
+@app.post("/workflow")
+def run_workflow(req: ChatRequest):
+    result = engine.run(req.prompt)
+    return result
