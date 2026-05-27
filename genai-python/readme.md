@@ -11,7 +11,7 @@
 
 1. I did a Deterministic LLM classifier:
    response = client.chat.completions.create(
-   model="meta-llama/Llama-3.1-8B-Instruct",
+   model="Qwen/Qwen2.5-7B-Instruct",
    messages=[{"role": "user", "content": structured_prompt}],
    max_tokens=300,
    temperature=0
@@ -321,3 +321,26 @@ so these are the steps:
 7.  MCP sends result back to AI
     ↓
 8.  AI formats final answer for user
+
+## ✅ Agentic Workflow Requirements Completed
+
+This project implements a structured multi-agent workflow system designed to demonstrate orchestration, modularity, persistence, and observability in GenAI architectures.
+
+### ✔ Build a 2-Agent Workflow
+
+Implemented:
+
+- `PlannerAgent`
+- `ExecutorAgent`
+
+The `PlannerAgent` decomposes tasks into execution steps, while the `ExecutorAgent` executes the generated plan through the centralized `WorkflowEngine`.
+
+---
+
+### ✔ Introduce State Persistence
+
+Implemented persistent workflow state using:
+
+```text
+workflow/state_store.py
+```
