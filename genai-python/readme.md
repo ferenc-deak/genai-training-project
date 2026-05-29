@@ -345,4 +345,50 @@ Implemented persistent workflow state using:
 workflow/state_store.py
 ```
 
-## Hardware Fundamentals
+## 🧠 Hardware Fundamentals – GenAI Performance Analysis
+
+This module demonstrates how hardware-related factors affect the performance of Generative AI systems.
+
+It focuses on understanding the relationship between system design choices and key performance metrics such as latency, throughput, and token generation speed.
+
+---
+
+## 📊 What is Measured
+
+### 1. Latency vs Batch Size
+
+This test measures how response time changes when batch size increases.
+
+- Larger batch sizes increase GPU utilization
+- But also increase latency due to higher computation load
+
+---
+
+### 2. Tokens/sec vs Context Length
+
+This test measures how generation speed changes with input context size.
+
+- Longer context requires more attention computation
+- This reduces tokens generated per second
+
+---
+
+### 3. Throughput vs Time-to-First-Token (TTFT)
+
+This test compares system efficiency vs response delay.
+
+- Higher batch size increases throughput
+- But increases time-to-first-token (TTFT)
+
+---
+
+## ⚙️ How It Works
+
+The module consists of four scripts:
+
+- `latency_test.py` → simulates latency vs batch size
+- `token_speed_test.py` → measures tokens/sec vs context length
+- `throughput_test.py` → compares throughput vs TTFT
+- `report.py` → generates final performance analysis
+
+These scripts can be run individually or triggered via a FastAPI endpoint using a background task.
