@@ -22,7 +22,7 @@ User input:
 """
 
     response = client.chat.completions.create(
-        model="Qwen/Qwen2.5-7B-Instruct",
+        model="meta-llama/Llama-3.1-8B-Instruct",
         messages=[{"role": "user", "content": structured_prompt}],
         max_tokens=300,
         temperature=0.2

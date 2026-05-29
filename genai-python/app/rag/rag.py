@@ -70,7 +70,7 @@ ANSWER:
 
     # Call LLM (HF hosted model)
     response = client.chat.completions.create(
-        model="Qwen/Qwen2.5-7B-Instruct",
+        model="meta-llama/Llama-3.1-8B-Instruct",
         messages=[
             {"role": "system", "content": "You are a strict RAG assistant."},
             {"role": "user", "content": prompt}

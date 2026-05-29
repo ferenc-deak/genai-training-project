@@ -326,7 +326,7 @@ so these are the steps:
 
 This project implements a structured multi-agent workflow system designed to demonstrate orchestration, modularity, persistence, and observability in GenAI architectures.
 
-### ✔ Build a 2-Agent Workflow
+# ✔ Build a 2-Agent Workflow
 
 Implemented:
 
@@ -337,10 +337,12 @@ The `PlannerAgent` decomposes tasks into execution steps, while the `ExecutorAge
 
 ---
 
-### ✔ Introduce State Persistence
+# ✔ Introduce State Persistence
 
 Implemented persistent workflow state using:
 
 ```text
 workflow/state_store.py
 ```
+
+## Hardware Fundamentals

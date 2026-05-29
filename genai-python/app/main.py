@@ -1,13 +1,25 @@
 from fastapi import FastAPI
+from fastapi import BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.mcp.server import mcp
 
 from app.chat import generate_agent
-from app.rag.rag import ask_question   # ONLY this
+from app.rag.rag import ask_question 
 from app.workflow.workflow import WorkflowEngine
 
+import subprocess
+import sys
+
 app = FastAPI()
+
+BASE = "app/hardware-fundamentals"
+
+def run_hardware_tests():
+    subprocess.run([sys.executable, f"{BASE}/latency_test.py"])
+    subprocess.run([sys.executable, f"{BASE}/token_speed_test.py"])
+    subprocess.run([sys.executable, f"{BASE}/throughput_test.py"])
+    subprocess.run([sys.executable, f"{BASE}/report.py"])
 
 engine = WorkflowEngine(use_external=True)
 
@@ -71,3 +83,11 @@ if __name__ == "__main__":
 def run_workflow(req: ChatRequest):
     result = engine.run(req.prompt)
     return result
+
+@app.post("/run-hardware-tests")
+def run_hardware(background_tasks: BackgroundTasks):
+    background_tasks.add_task(run_hardware_tests)
+    return {
+        "status": "started",
+        "message": "Hardware benchmarks running in background"
+    }
