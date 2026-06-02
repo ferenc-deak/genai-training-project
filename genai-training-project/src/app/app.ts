@@ -75,7 +75,7 @@ export class App {
 
           setTimeout(() => {
             this.showRag = true;
-          }, 0);
+          }, 1000);
 
           this.checkDone();
         },
@@ -84,7 +84,7 @@ export class App {
 
           setTimeout(() => {
             this.showRag = true;
-          }, 0);
+          }, 1000);
 
           this.checkDone();
         },
