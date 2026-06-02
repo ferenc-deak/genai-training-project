@@ -24,17 +24,17 @@
 
   <hr />
 
-  @if (ragResponse) {
-    <div>
-      <h3>📚 RAG Response:</h3>
-      <p>{{ ragResponse }}</p>
-    </div>
-  }
-
-  @if (aiResponse) {
+  @if (showAi) {
     <div>
       <h3>🤖 AI Response:</h3>
       <p>{{ aiResponse }}</p>
+    </div>
+  }
+
+  @if (showRag) {
+    <div>
+      <h3>📚 RAG Response:</h3>
+      <p>{{ ragResponse }}</p>
     </div>
   }
 </div>
