@@ -1,3 +1,73 @@
-venv/
+# =====================
+# Environment / secrets
+# =====================
+.env
+.env.*
+*.key
+*.pem
+
+# =====================
+# Python
+# =====================
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# =====================
+# Node.js (if used)
+# =====================
+node_modules/
+dist/
+build/
+
+# =====================
+# AI / ML specific
+# =====================
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.onnx
+
+# Large datasets (adjust to your needs)
+data/
+datasets/
+*.csv
+*.parquet
+
+# Hugging Face cache
+.cache/
+huggingface/
+transformers_cache/
+
+# TensorFlow / PyTorch cache
+*.log
+wandb/
+mlruns/
+
+# =====================
+# IDE / OS
+# =====================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =====================
+# Docker (optional)
+# =====================
+docker-compose.override.yml
+
+# =====================
+# Misc
+# =====================
+*.log
