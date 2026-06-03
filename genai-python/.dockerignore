@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+
+# Env files
+.env
+
+# Git
+.git/
+
+# Test/cache
+.pytest_cache/
+.mypy_cache/
+.coverage
+
+# Logs
+*.log
+
+# Data / ML artifacts
+data/
+datasets/
+models/
+*.bin
+*.pt
+*.pth
+
+# Frontend / Node
+node_modules/
+dist/
+build/
+
+# OS files
+.DS_Store
