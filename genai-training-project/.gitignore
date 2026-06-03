@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+node_modules/
+.venv/
+data/chroma_db/
+models/
