@@ -5,7 +5,7 @@
 3. How to run evaluation
    python evaluate.py
 4. How to test reproducibility
-   python repro_steps.py
+   python repro_test.py
 
 ## 🧠 Baseline Engineering Setup
 
