@@ -4,3 +4,4 @@ langchain
 faiss-cpu
 python-dotenv
 mcp
+huggingface-hub
