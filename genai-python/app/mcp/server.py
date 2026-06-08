@@ -27,4 +27,5 @@ def get_user(input: UserSchema):
 
 
 if __name__ == "__main__":
+    print("🚀 MCP server starting...")
     mcp.run()

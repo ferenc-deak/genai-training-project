@@ -33,11 +33,11 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 
 ## 🔌 Tool Calling (MCP System)
 
-| File / Module     | Purpose          | Description                                  |
-| ----------------- | ---------------- | -------------------------------------------- |
-| app/tools.py      | Tool Definitions | Defines functions like add, divide, get_user |
-| app/mcp_server.py | MCP Server       | Executes tool calls from LLM                 |
-| app/schemas.py    | Validation       | Pydantic models for safe inputs              |
+| Layer        | Module            | Description                                                                  |
+| ------------ | ----------------- | ---------------------------------------------------------------------------- |
+| Tool Layer   | app/tools         | Implements core business logic (e.g., arithmetic operations, user retrieval) |
+| MCP Server   | app/mcp/server.py | Exposes tools to the LLM and executes tool calls in a controlled environment |
+| Schema Layer | app/schemas       | Defines Pydantic models for input validation and type safety                 |
 
 ---
 
@@ -74,13 +74,14 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 
 # 🚀 How to Run
 
-| Command                                 | Purpose                   |
-| --------------------------------------- | ------------------------- |
-| source venv/Scripts/activate            | Activate environment      |
-| python -m uvicorn app.main:app --reload | Run API server            |
-| python evaluate.py                      | Run evaluation            |
-| python repro_test.py                    | Run reproducibility tests |
-| python app/attention_demo.py            | Run transformer demo      |
+| Command                                 | Purpose                       |
+| --------------------------------------- | ----------------------------- |
+| source venv/Scripts/activate            | Activate environment          |
+| python -m uvicorn app.main:app --reload | Run API server                |
+| python evaluate.py                      | Run evaluation                |
+| python repro_test.py                    | Run reproducibility tests     |
+| python app/attention_demo.py            | Run transformer demo          |
+| python -m app.mcp.server                | Runs inside package structure |
 
 ---
 
