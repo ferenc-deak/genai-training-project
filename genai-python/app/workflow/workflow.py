@@ -8,39 +8,33 @@ from app.core.tracing import TraceLogger
 
 class WorkflowEngine:
 
-    def __init__(self, use_external=False):
+    def __init__(self, use_external=False, llm=None):
 
-        self.planner = PlannerAgent()
+        # 🔥 inject LLM into planner
+        self.planner = PlannerAgent(llm)
 
-        # A2A boundary
+        # A2A boundary (inject same LLM)
         if use_external:
-            self.executor = ExternalExecutorAgent()
+            self.executor = ExternalExecutorAgent(llm)
         else:
-            self.executor = ExecutorAgent()
+            self.executor = ExecutorAgent(llm)
 
         self.store = StateStore()
         self.tracer = TraceLogger()
 
     def run(self, task: str):
 
-        # Load persisted state
         state = self.store.load()
-
         state["task"] = task
 
         self.tracer.log("workflow_start", state)
 
-        # Agent 1: planner
         state = self.planner.run(task, state)
-
         self.tracer.log("planner_completed", state)
 
-        # Agent 2: executor
         state = self.executor.run(state)
-
         self.tracer.log("executor_completed", state)
 
-        # Persist state
         self.store.save(state)
 
         self.tracer.log("workflow_finished", state)
