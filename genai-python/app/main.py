@@ -1,28 +1,21 @@
-from fastapi import FastAPI
-from fastapi import BackgroundTasks
+from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from app.mcp.server import mcp
-
-from app.chat import generate_agent
-from app.rag.rag import ask_question 
-from app.workflow.workflow import WorkflowEngine
 
 import subprocess
 import sys
 
+from app.chat import generate_agent
+from app.rag.rag import ask_question
+from app.workflow.workflow import WorkflowEngine
+from app.mcp.server import mcp
+
 app = FastAPI()
-
-BASE = "app/hardware-fundamentals"
-
-def run_hardware_tests():
-    subprocess.run([sys.executable, f"{BASE}/latency_test.py"])
-    subprocess.run([sys.executable, f"{BASE}/token_speed_test.py"])
-    subprocess.run([sys.executable, f"{BASE}/throughput_test.py"])
-    subprocess.run([sys.executable, f"{BASE}/report.py"])
 
 engine = WorkflowEngine(use_external=True)
 
+
+# ---------------- CORS ----------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:4200"],
@@ -30,39 +23,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------------- CHAT ----------------
+
+# ---------------- MODELS ----------------
 class ChatRequest(BaseModel):
     prompt: str
 
 
-@app.post("/chat")
-def chat(req: ChatRequest):
-    return {"response": generate_agent(req.prompt)}
-
-
-# ---------------- RAG ----------------
 class RAGRequest(BaseModel):
     question: str
 
 
+# ---------------- CHAT ----------------
+@app.post("/chat")
+def chat(req: ChatRequest):
+    return {
+        "response": generate_agent(req.prompt, mode="chat")
+    }
+
+
+# ---------------- RAG ----------------
 @app.post("/ask")
 def ask(req: RAGRequest):
-    question = req.question
 
-    # 1. Get RAG result
-    rag_result = ask_question(question)
+    rag_result = ask_question(req.question)
 
-    # make sure you return structured data from RAG
     rag_answer = rag_result.get("answer", "")
     rag_score = rag_result.get("score", 0)
 
-    # 2. Get AI answer
-    ai_answer = generate_agent(question)
+    ai_answer = generate_agent(req.question, mode="chat")
+    ai_score = len(ai_answer) / 1000
 
-    # optional: simple AI scoring heuristic
-    ai_score = len(ai_answer) / 1000  # VERY simple baseline
-
-    # 3. Decision logic
     if rag_score > ai_score and rag_answer.strip():
         return {
             "answer": rag_answer,
@@ -76,13 +66,22 @@ def ask(req: RAGRequest):
         "score": ai_score
     }
 
-if __name__ == "__main__":
-    mcp.run()
 
+# ---------------- WORKFLOW ----------------
 @app.post("/workflow")
 def run_workflow(req: ChatRequest):
-    result = engine.run(req.prompt)
-    return result
+    return engine.run(req.prompt)
+
+
+# ---------------- HARDWARE TESTS ----------------
+BASE = "app/hardware-fundamentals"
+
+def run_hardware_tests():
+    subprocess.run([sys.executable, f"{BASE}/latency_test.py"])
+    subprocess.run([sys.executable, f"{BASE}/token_speed_test.py"])
+    subprocess.run([sys.executable, f"{BASE}/throughput_test.py"])
+    subprocess.run([sys.executable, f"{BASE}/report.py"])
+
 
 @app.post("/run-hardware-tests")
 def run_hardware(background_tasks: BackgroundTasks):
@@ -91,3 +90,8 @@ def run_hardware(background_tasks: BackgroundTasks):
         "status": "started",
         "message": "Hardware benchmarks running in background"
     }
+
+
+# ---------------- MCP ----------------
+if __name__ == "__main__":
+    mcp.run()

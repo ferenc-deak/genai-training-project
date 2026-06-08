@@ -7,10 +7,13 @@ class ExternalExecutorAgent:
 
         from app.rag.retriever import search_docs
 
-        query = state.get("task")
+        query = f"""
+login authentication backend debugging error troubleshooting:
+{state.get('task')}
+"""
 
         docs = search_docs(query)
-        context = "\n".join([d.page_content for d in docs])
+        context = "\n".join(docs)
 
         state["retrieved_context"] = context
 

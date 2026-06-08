@@ -8,14 +8,51 @@ client = InferenceClient(
     api_key=os.getenv("HF_TOKEN")
 )
 
-def generate_agent(prompt: str):
-    structured_prompt = f"""
-You are a helpful assistant.
+
+def generate_agent(prompt: str, mode: str = "chat"):
+    """
+    mode:
+    - chat → free text response
+    - eval → strict JSON output
+    - agent → structured reasoning JSON
+    """
+
+    if mode == "eval":
+        structured_prompt = f"""
+You are a strict classification system.
+
+Return ONLY valid JSON:
+{{"action": "low|medium|high"}}
 
 Rules:
-- Return only plain text
-- Be concise
-- No markdown
+- no explanation
+- no markdown
+- no extra text
+
+Input:
+{prompt}
+"""
+
+    elif mode == "agent":
+        structured_prompt = f"""
+You are an AI agent.
+
+Return ONLY valid JSON:
+{{
+  "action": "analyze|execute|plan",
+  "result": "short output"
+}}
+
+Input:
+{prompt}
+"""
+
+    else:
+        structured_prompt = f"""
+You are a helpful assistant.
+
+Be concise and clear.
+No markdown.
 
 User input:
 {prompt}

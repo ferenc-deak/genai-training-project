@@ -11,7 +11,7 @@ def evaluate():
         for line in f:
             sample = json.loads(line)
 
-            output = generate_agent(sample["input"])
+            output = generate_agent(sample["input"], mode="eval")
 
             # 🔥 FIX: ensure dict format
             if isinstance(output, str):
