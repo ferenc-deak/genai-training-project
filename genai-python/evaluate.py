@@ -51,10 +51,8 @@ def evaluate():
 
             output = generate_agent(sample["input"], mode="eval")
 
-            # Parse output safely
             output = parse_output(output)
 
-            # Extract prediction (support multiple possible keys)
             raw_pred = (
                 output.get("action")
                 or output.get("result")

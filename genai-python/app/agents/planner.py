@@ -29,16 +29,16 @@ Task:
 
         response = self.llm.generate(prompt)
 
-        # -----------------------------
+        
         # DEBUG (IMPORTANT)
-        # -----------------------------
+        
         print("\n[PLANNER RAW RESPONSE]\n", response, "\n")
 
         steps = []
 
-        # -----------------------------
+        
         # SAFETY CLEANING
-        # -----------------------------
+        
         if response and isinstance(response, str):
 
             response = response.strip()
@@ -60,15 +60,15 @@ Task:
                 else:
                     steps = []
 
-        # -----------------------------
+        
         # FINAL SAFETY CHECK
-        # -----------------------------
+        
         if not isinstance(steps, list):
             steps = []
 
-        # -----------------------------
+        
         # UPDATE STATE
-        # -----------------------------
+        
         state["plan"] = steps
         state["status"] = "planned"
 

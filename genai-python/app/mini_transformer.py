@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-# -------------------------
+
 # 1. Tokenizer
-# -------------------------
+
 def tokenize(sentence):
     words = sentence.lower().split()
     vocab = {w: i for i, w in enumerate(set(words))}
@@ -16,9 +16,9 @@ def tokenize(sentence):
     return tokens, words, vocab
 
 
-# -------------------------
+
 # 2. Mini Transformer
-# -------------------------
+
 class MiniTransformer(nn.Module):
     def __init__(self, vocab_size, d_model=16):
         super().__init__()
@@ -47,9 +47,9 @@ class MiniTransformer(nn.Module):
         return self.fc(out), attn
 
 
-# -------------------------
+
 # 3. Visualization
-# -------------------------
+
 def plot_attention(attn, words):
     import numpy as np
 
@@ -66,9 +66,9 @@ def plot_attention(attn, words):
     plt.show()
 
 
-# -------------------------
+
 # 4. RUN EVERYTHING
-# -------------------------
+
 if __name__ == "__main__":
 
     sentence = "server server server crashed"

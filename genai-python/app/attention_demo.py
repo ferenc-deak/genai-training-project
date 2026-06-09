@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-# -----------------------------
+
 # 1. Simple self-attention
-# -----------------------------
+
 class SimpleSelfAttention:
     def __init__(self, d_model):
         self.d_model = d_model
@@ -29,9 +29,9 @@ class SimpleSelfAttention:
         return output, attn
 
 
-# -----------------------------
+
 # 2. Tokenization (FIXED)
-# -----------------------------
+
 def tokenize_sentence(sentence, d_model=4):
     words = sentence.lower().split()
     seq_len = len(words)
@@ -42,9 +42,9 @@ def tokenize_sentence(sentence, d_model=4):
     return x, words
 
 
-# -----------------------------
+
 # 3. Visualization
-# -----------------------------
+
 def plot_attention(attn, words):
     plt.figure(figsize=(6, 5))
     sns.heatmap(
@@ -58,9 +58,9 @@ def plot_attention(attn, words):
     plt.show()
 
 
-# -----------------------------
+
 # 4. Run demo
-# -----------------------------
+
 if __name__ == "__main__":
     sentence = "the server is down because the server crashed"
 

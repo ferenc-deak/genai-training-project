@@ -7,31 +7,31 @@ class ExecutorAgent:
 
         from app.rag.retriever import search_docs
 
-        # -----------------------------
+        
         # 1. GET TASK
-        # -----------------------------
+        
         task = state.get("task", "")
 
-        # -----------------------------
+        
         # 2. BUILD SEARCH QUERY (IMPORTANT FIX)
-        # -----------------------------
+        
         query = f"""
 backend login authentication debugging issue:
 {task}
 """
 
-        # -----------------------------
+        
         # 3. RETRIEVE DOCS (RAG)
-        # -----------------------------
+        
         docs = search_docs(query)
 
         context = "\n\n".join([f"- {d}" for d in docs])
 
         state["retrieved_context"] = context
 
-        # -----------------------------
+        
         # 4. EXECUTION LOOP
-        # -----------------------------
+        
         results = []
 
         for step in state.get("plan", []):
@@ -64,9 +64,9 @@ Return:
 
             results.append(result)
 
-        # -----------------------------
+        
         # 5. UPDATE STATE
-        # -----------------------------
+        
         state["results"] = results
         state["status"] = "completed"
 
