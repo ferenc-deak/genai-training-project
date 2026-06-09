@@ -1,26 +1,67 @@
 import json
 from app.main import generate_agent
 
-def evaluate():
 
+def normalize_label(value):
+    """
+    Converts model output into one of: low / medium / high / None
+    """
+    if value is None:
+        return None
+
+    text = str(value).strip().lower()
+
+    if "low" in text:
+        return "low"
+    if "medium" in text:
+        return "medium"
+    if "high" in text:
+        return "high"
+
+    return None
+
+
+def parse_output(output):
+    """
+    Safely converts model output into a dict-like structure.
+    Handles:
+    - dict output
+    - JSON string output
+    - plain text output
+    """
+    if isinstance(output, dict):
+        return output
+
+    if isinstance(output, str):
+        try:
+            return json.loads(output)
+        except Exception:
+            return {"action": output}
+
+    return {"action": None}
+
+
+def evaluate():
     correct = 0
     total = 0
 
-    with open("eval_dataset.jsonl", "r") as f:
-
+    with open("eval_dataset.jsonl", "r", encoding="utf-8") as f:
         for line in f:
             sample = json.loads(line)
 
             output = generate_agent(sample["input"], mode="eval")
 
-            # 🔥 FIX: ensure dict format
-            if isinstance(output, str):
-                try:
-                    output = json.loads(output)
-                except:
-                    output = {"action": None}
+            # Parse output safely
+            output = parse_output(output)
 
-            predicted = output.get("action")
+            # Extract prediction (support multiple possible keys)
+            raw_pred = (
+                output.get("action")
+                or output.get("result")
+                or output.get("label")
+            )
+
+            predicted = normalize_label(raw_pred)
             expected = sample["expected"]
 
             is_correct = predicted == expected
@@ -28,6 +69,7 @@ def evaluate():
             print("INPUT:", sample["input"])
             print("EXPECTED:", expected)
             print("PREDICTED:", predicted)
+            print("RAW:", output)
             print("CORRECT:", is_correct)
             print("-" * 40)
 
@@ -35,7 +77,8 @@ def evaluate():
             if is_correct:
                 correct += 1
 
-    print("\nFINAL ACCURACY:", correct / total if total > 0 else 0)
+    accuracy = correct / total if total > 0 else 0
+    print("\nFINAL ACCURACY:", accuracy)
 
 
 if __name__ == "__main__":
