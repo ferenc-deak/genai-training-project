@@ -1,3 +1,10 @@
-{"input":"Login system is broken","expected":"high"}
 {"input":"UI typo on homepage","expected":"low"}
+{"input":"Button misaligned in header","expected":"low"}
+{"input":"Minor CSS issue in footer","expected":"low"}
+{"input":"Login sometimes fails","expected":"medium"}
+{"input":"Search is slow","expected":"medium"}
+{"input":"API latency increased","expected":"medium"}
+{"input":"Database CPU usage is high","expected":"high"}
+{"input":"Login system is broken","expected":"high"}
 {"input":"Database is down","expected":"high"}
+{"input":"Payment system is failing","expected":"high"}
