@@ -1,11 +1,6 @@
 # 🧠 AI System Project Overview
 
 This project is a modular AI system including RAG, tools (MCP), agents, evaluation, fine-tuning, and transformer experiments.
-I created python check_cuda.py and ran it but the result is:
-
-- CUDA available: False
-- GPU count: 0
-  So no No CUDA GPU detected
 
 ---
 
