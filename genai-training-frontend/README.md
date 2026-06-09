@@ -32,7 +32,7 @@ Funcționalități:
    src/environments/environment.ts
 
 4. Run:
-   ng serve
+   npm start
 
 Accesează: http://localhost:4200
 
