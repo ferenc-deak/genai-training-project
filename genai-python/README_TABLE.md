@@ -58,11 +58,12 @@ I created python check_cuda.py and ran it but the result is:
 
 ## 🧠 Learning Modules
 
-| File / Module         | Purpose          | Description                         |
-| --------------------- | ---------------- | ----------------------------------- |
-| app/attention_demo.py | Transformer Demo | Visualizes self-attention mechanism |
-| lora_finetune.py      | Fine-Tuning      | LoRA-based model adaptation         |
-| dataset.jsonl         | Training Data    | Dataset used for fine-tuning        |
+| File / Module         | Purpose             | Description                                                   |
+| --------------------- | ------------------- | ------------------------------------------------------------- |
+| app/attention_demo.py | Transformer Demo    | Visualizes self-attention mechanism                           |
+| lora_finetune.py      | Fine-Tuning         | LoRA-based model adaptation                                   |
+| dataset.jsonl         | Training Data       | Dataset used for fine-tuning                                  |
+| Run_lora_gpu.ipynb    | Fine-Tuning (Colab) | End-to-end LoRA fine-tuning of Phi-3 on GPU (Google Colab T4) |
 
 ---
 
