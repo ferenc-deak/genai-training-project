@@ -5,18 +5,19 @@ import seaborn as sns
 
 
 # -----------------------------
-# 1. Simple toy self-attention
+# 1. Simple self-attention
 # -----------------------------
 class SimpleSelfAttention:
-    def __init__(self, d_model=4):
+    def __init__(self, d_model):
         self.d_model = d_model
 
-        # random weights (toy example)
         self.Wq = torch.randn(d_model, d_model)
         self.Wk = torch.randn(d_model, d_model)
         self.Wv = torch.randn(d_model, d_model)
 
     def forward(self, x):
+        # x: (seq_len, d_model)
+
         Q = x @ self.Wq
         K = x @ self.Wk
         V = x @ self.Wv
@@ -29,16 +30,16 @@ class SimpleSelfAttention:
 
 
 # -----------------------------
-# 2. Tokenize simple input
+# 2. Tokenization (FIXED)
 # -----------------------------
-def tokenize_sentence(sentence):
+def tokenize_sentence(sentence, d_model=4):
     words = sentence.lower().split()
-    vocab = {w: i for i, w in enumerate(set(words))}
+    seq_len = len(words)
 
-    x = torch.eye(len(vocab))  # one-hot vectors
-    tokens = [vocab[w] for w in words]
+    # random embeddings instead of one-hot
+    x = torch.randn(seq_len, d_model)
 
-    return x[tokens], words
+    return x, words
 
 
 # -----------------------------
@@ -46,11 +47,13 @@ def tokenize_sentence(sentence):
 # -----------------------------
 def plot_attention(attn, words):
     plt.figure(figsize=(6, 5))
-    sns.heatmap(attn.detach().numpy(),
-                xticklabels=words,
-                yticklabels=words,
-                cmap="Blues",
-                annot=True)
+    sns.heatmap(
+        attn.detach().numpy(),
+        xticklabels=words,
+        yticklabels=words,
+        cmap="Blues",
+        annot=True
+    )
     plt.title("Self-Attention Map")
     plt.show()
 
@@ -61,9 +64,10 @@ def plot_attention(attn, words):
 if __name__ == "__main__":
     sentence = "the server is down because the server crashed"
 
-    x, words = tokenize_sentence(sentence)
+    x, words = tokenize_sentence(sentence, d_model=4)
 
-    model = SimpleSelfAttention(d_model=len(words))
+    model = SimpleSelfAttention(d_model=4)
+
     output, attn = model.forward(x)
 
     print("Attention Matrix:\n", attn)
