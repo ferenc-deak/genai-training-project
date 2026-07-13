@@ -34,10 +34,16 @@ class SimpleSelfAttention:
 
 def tokenize_sentence(sentence, d_model=4):
     words = sentence.lower().split()
-    seq_len = len(words)
 
-    # random embeddings instead of one-hot
-    x = torch.randn(seq_len, d_model)
+    # Create one embedding per unique word
+    embeddings = {}
+
+    for word in words:
+        if word not in embeddings:
+            embeddings[word] = torch.randn(d_model)
+
+    # Build the sequence using the shared embeddings
+    x = torch.stack([embeddings[word] for word in words])
 
     return x, words
 

@@ -56,7 +56,7 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 | File / Module         | Purpose             | Description                                                   |
 | --------------------- | ------------------- | ------------------------------------------------------------- |
 | app/attention_demo.py | Transformer Demo    | Visualizes self-attention mechanism                           |
-| lora_finetune.py      | Fine-Tuning         | LoRA-based model adaptation                                   |
+| lora_finetune.py      | Fine-Tuning         | LoRA-bas`ed model adaptation                                   |
 | dataset.jsonl         | Training Data       | Dataset used for fine-tuning                                  |
 | Run_lora_gpu.ipynb    | Fine-Tuning (Colab) | End-to-end LoRA fine-tuning of Phi-3 on GPU (Google Colab T4) |
 
@@ -83,6 +83,7 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 | python repro_test.py                    | Run reproducibility tests     |
 | python app/attention_demo.py            | Run transformer demo          |
 | python -m app.mcp.server                | Runs inside package structure |
+| run python train.py                     | Runs inside folder structure  |
 
 ---
 
@@ -97,3 +98,20 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 | Fine-Tuning             | LoRA adaptation of pretrained models               |
 | Attention Visualization | Understanding transformer internals                |
 | System Evaluation       | Benchmarking and regression testing                |
+
+## you should run python train.py from inside the folder to see the training loop
+
+## 🧠 Fixed after feedback and implementations for Module 3
+
+| Assessment               | Current Project                           | Status                                      |
+|--------------------------|-------------------------------------------|---------------------------------------------|
+| Shared embeddings        | `nn.Embedding`                            | ✅ Fixed                                    |
+| Trainable Q/K/V          | `nn.Linear`                               | ✅ Fixed                                    |
+| Trained weights          | `train.py` with Adam + CrossEntropyLoss   | ✅ Fixed                                    |
+| Meaningful visualization | `visualize.py` loads trained model        | ✅ Fixed                                    |
+| `nn.Module`              | `TinyTransformer(nn.Module)`              | ✅ Fixed                                    |
+| Positional encoding      | Not implemented                           | ⚠️ Mentioned as a minor note, not required  |
+| Multi-head attention     | Not implemented                           | ⚠️ Mentioned as a minor note, not required  |
+| Masking                  | Not implemented                           | ⚠️ Mentioned as a minor note, not required  |
+
+

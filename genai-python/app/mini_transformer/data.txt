@@ -1,0 +1,7 @@
+the server is down
+the server crashed
+restart the server
+the database is down
+database crashed yesterday
+the website is online
+restart the database
