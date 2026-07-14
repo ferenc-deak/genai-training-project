@@ -1,3 +1,3 @@
-from app.rag.indexer import create_vectorstore
+from app.rag.indexer import build_index
 
-create_vectorstore()
+build_index()

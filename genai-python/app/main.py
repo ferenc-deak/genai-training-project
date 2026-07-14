@@ -47,23 +47,10 @@ def ask(req: RAGRequest):
 
     rag_result = ask_question(req.question)
 
-    rag_answer = rag_result.get("answer", "")
-    rag_score = rag_result.get("score", 0)
-
-    ai_answer = generate_agent(req.question, mode="chat")
-    ai_score = len(ai_answer) / 1000
-
-    if rag_score > ai_score and rag_answer.strip():
-        return {
-            "answer": rag_answer,
-            "source": "rag",
-            "score": rag_score
-        }
-
     return {
-        "answer": ai_answer,
-        "source": "ai",
-        "score": ai_score
+        "answer": rag_result["answer"],
+        "sources": rag_result["sources"],
+        "source": "rag"
     }
 
 

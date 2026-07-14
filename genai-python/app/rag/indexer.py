@@ -55,8 +55,8 @@ def build_index():
     docs = load_docs()
 
     # Chunking strategy:
-    # - chunk_size=400 keeps more related information together.
-    # - chunk_overlap=80 preserves context between neighboring chunks,
+    # - chunk_size=100 keeps more related information together.
+    # - chunk_overlap=20 preserves context between neighboring chunks,
     #   reducing the chance that important information is split.
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=100,
