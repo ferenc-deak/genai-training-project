@@ -9,17 +9,50 @@ VECTORSTORE_PATH = os.path.normpath(
 
 def search_docs(query: str, k: int = 5):
     db = get_retriever()
-    results = db.similarity_search(query, k=k * 2)
 
-    # simple rerank boost
+    results = db.similarity_search(query, k=k * 5)
+
+    stop_words = {
+        "the",
+        "is",
+        "a",
+        "an",
+        "of",
+        "for",
+        "to",
+        "and",
+        "what",
+        "how"
+    }
+
+    query_words = [
+        w.lower()
+        for w in query.split()
+        if w.lower() not in stop_words
+    ]
+
     scored = []
+
     for r in results:
-        score = sum(1 for w in query.lower().split() if w in r.page_content.lower())
+        text = r.page_content.lower()
+
+        score = sum(
+            1
+            for word in query_words
+            if word in text
+        )
+
         scored.append((score, r))
 
-    scored.sort(key=lambda x: x[0], reverse=True)
+    scored.sort(
+        key=lambda x: x[0],
+        reverse=True
+    )
 
-    return [text for _, text in scored[:k]]
+    return [
+        doc
+        for _, doc in scored[:k]
+    ]
 
 def get_retriever():
     embeddings = HuggingFaceEmbeddings(

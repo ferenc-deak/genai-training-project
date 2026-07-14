@@ -1,0 +1,8 @@
+{"query": "What is RAG?", "expected_source": "rag.txt"}
+{"query": "How does Retrieval-Augmented Generation work?", "expected_source": "rag.txt"}
+{"query": "How does RAG reduce hallucination?", "expected_source": "rag.txt"}
+{"query": "What is FastAPI?", "expected_source": "fastapi.txt"}
+{"query": "Why use FastAPI for APIs?", "expected_source": "fastapi.txt"}
+{"query": "What is an LLM?", "expected_source": "ai_intro.txt"}
+{"query": "What is artificial intelligence?", "expected_source": "ai_intro.txt"}
+{"query": "What is machine learning?", "expected_source": "ai_intro.txt"}

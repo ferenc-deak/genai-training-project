@@ -20,21 +20,32 @@ VECTORSTORE_PATH = os.path.normpath(VECTORSTORE_PATH)
 # LOAD TXT FILES
 # ----------------------------
 def load_docs():
-    texts = []
+
+    documents = []
 
     print("\nFILES FOUND IN FOLDER:")
 
     for file in os.listdir(DATA_PATH):
+
         filepath = os.path.join(DATA_PATH, file)
 
         if file.endswith(".txt"):
+
             print("LOADING:", file)
 
             with open(filepath, "r", encoding="utf-8") as f:
-                texts.append(f.read())
+                content = f.read()
 
-    print(f"\nTOTAL FILES LOADED: {len(texts)}")
-    return texts
+                print(f"{file}: {len(content)} characters")
+
+                documents.append({
+                    "content": content,
+                    "source": file
+                })
+
+    print(f"\nTOTAL FILES LOADED: {len(documents)}")
+
+    return documents
 
 
 # ----------------------------
@@ -48,14 +59,24 @@ def build_index():
     # - chunk_overlap=80 preserves context between neighboring chunks,
     #   reducing the chance that important information is split.
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=400,
-        chunk_overlap=80,
+        chunk_size=100,
+        chunk_overlap=20,
         separators=["\n\n", "\n", ". ", " "]
     )
 
     chunks = []
+    metadatas = []
     for doc in docs:
-        chunks.extend(splitter.split_text(doc))
+        split_chunks = splitter.split_text(
+        doc["content"]
+    )
+
+    chunks.extend(split_chunks)
+
+    for _ in split_chunks:
+        metadatas.append({
+            "source": doc["source"]
+    })
 
     print("\nTOTAL DOCUMENTS:", len(docs))
     print("TOTAL CHUNKS CREATED:", len(chunks))
@@ -68,6 +89,7 @@ def build_index():
     # Create / overwrite DB
     db = Chroma.from_texts(
         texts=chunks,
+        metadatas=metadatas,
         embedding=embeddings,
         persist_directory=VECTORSTORE_PATH
     )
