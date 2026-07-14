@@ -139,24 +139,20 @@ For this reason, the **400/80** configuration was adopted as the final chunking 
 
 ### 1. Reranking / Hybrid Retrieval
 
-**Requirement:**
-Reranking / Hybrid Retrieval
+| **Requirement**              | **Status**   |
+| ---------------------------- | ------------ |
+| Reranking / Hybrid Retrieval | ✅ Completed |
 
-**Status:**
-✅ Completed
-
-**Implementation:**
-Implemented a hybrid retrieval approach in `search_docs()`. The retriever over-fetches documents (`k × 2`) using vector similarity search, applies a lexical reranking step based on query-word matches, and returns the top `k` most relevant chunks. The RAGpipeline now uses `search_docs()` directly inside `ask_question()`, ensuring reranked documents are used when generating the final answer.
+| **Implementation**                                                                                                                                                                                                                                                                                                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Implemented a hybrid retrieval approach in `search_docs()`. The retriever over-fetches documents (`k × 2`) using vector similarity search, applies a lexical reranking step based on query-word matches, and returns the top `k` most relevant chunks. The RAG pipeline now uses `search_docs()` directly inside `ask_question()`, ensuring reranked documents are used when generating the final answer. |
 
 ---
 
-### 2. Golden Dataset + Regression Tests + Evaluation
+| **Requirement**                                | **Status**   |
+| ---------------------------------------------- | ------------ |
+| Golden Dataset + Regression Tests + Evaluation | ✅ Completed |
 
-**Requirement:**
-Golden Dataset + Regression Tests + Evaluation
-
-**Status:**
-✅ Completed
-
-**Implementation:**
-Created a RAG-specific golden dataset (`evaluation/rag_dataset.jsonl`) mapping evaluation queries to their expected document sources. Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against hybrid retrieval using the Recall@5 metric. Added `evaluation/test_rag_regression.py` to verify retrieval behavior remains consistent across future changes and help detect retrieval regressions.
+| **Implementation**                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Created a RAG-specific golden dataset (`evaluation/rag_dataset.jsonl`) mapping evaluation queries to their expected document sources. Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against hybrid retrieval using the Recall@5 metric. Added `evaluation/test_rag_regression.py` to verify retrieval behavior remains consistent across future changes and help detect retrieval regressions. |
