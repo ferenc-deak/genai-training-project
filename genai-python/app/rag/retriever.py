@@ -15,9 +15,9 @@ def search_docs(query: str, k: int = 5):
     scored = []
     for r in results:
         score = sum(1 for w in query.lower().split() if w in r.page_content.lower())
-        scored.append((score, r.page_content))
+        scored.append((score, r))
 
-    scored.sort(reverse=True)
+    scored.sort(key=lambda x: x[0], reverse=True)
 
     return [text for _, text in scored[:k]]
 

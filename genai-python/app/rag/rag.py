@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
 
-from app.rag.retriever import get_retriever
+from app.rag.retriever import get_retriever, search_docs
 
 load_dotenv()
 
@@ -35,10 +35,7 @@ def get_db():
 # MAIN RAG FUNCTION
 # ----------------------------
 def ask_question(question: str):
-    db = get_db()
-
-    # Retrieve relevant documents
-    docs = db.similarity_search(question, k=5)
+    docs = search_docs(question, k=5)
 
     if not docs:
         return {

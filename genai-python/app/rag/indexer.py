@@ -1,6 +1,7 @@
+import sys
 import os
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
 # ----------------------------
@@ -21,7 +22,7 @@ VECTORSTORE_PATH = os.path.normpath(VECTORSTORE_PATH)
 def load_docs():
     texts = []
 
-    print("\n📂 FILES FOUND IN FOLDER:")
+    print("\nFILES FOUND IN FOLDER:")
 
     for file in os.listdir(DATA_PATH):
         filepath = os.path.join(DATA_PATH, file)
@@ -42,6 +43,10 @@ def load_docs():
 def build_index():
     docs = load_docs()
 
+    # Chunking strategy:
+    # - chunk_size=400 keeps more related information together.
+    # - chunk_overlap=80 preserves context between neighboring chunks,
+    #   reducing the chance that important information is split.
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=400,
         chunk_overlap=80,
@@ -67,9 +72,9 @@ def build_index():
         persist_directory=VECTORSTORE_PATH
     )
 
-    db.persist()
+    # db.persist()  # Not needed with Chroma 0.4+
 
-    print("\n✅ Vector DB created successfully at:", VECTORSTORE_PATH)
+    print("\n Vector DB created successfully at:", VECTORSTORE_PATH)
 
 
 # ----------------------------
