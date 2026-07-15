@@ -157,7 +157,7 @@ For this reason, the **400/80** configuration was adopted as the final chunking 
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Created a RAG-specific golden dataset (`evaluation/rag_dataset.jsonl`) mapping evaluation queries to their expected document sources. Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against hybrid retrieval using the Recall@5 metric. Added `evaluation/test_rag_regression.py` to verify retrieval behavior remains consistent across future changes and help detect retrieval regressions. |
 
-## Module 5 – Comparison of Prompting, RAG, Fine-Tuning and Hybrid Approaches
+# Module 5 – Comparison of Prompting, RAG, Fine-Tuning and Hybrid Approaches
 
 ## Comparison of AI Approaches
 
@@ -269,11 +269,11 @@ For this reason, the **400/80** configuration was adopted as the final chunking 
 
 For this project, the recommended approach is a **hybrid solution combining Retrieval-Augmented Generation (RAG) with LoRA fine-tuning**.
 
-The RAG pipeline developed in Module 4 retrieves relevant document chunks using vector similarity search combined with lexical reranking before generating the final response. This allows the system to answer questions using the latest indexed documents without retraining the model whenever the knowledge base changes.
+The RAG pipeline developed in Module 4 retrieves relevant document chunks using vector similarity search combined with lexical reranking before generating the final response. This enables the system to answer questions using the latest indexed documents without retraining the model whenever the knowledge base changes.
 
 The LoRA fine-tuning implemented in Module 5 adapts the Phi-3 Mini model to better follow the project's instruction format while training only lightweight adapter parameters. This improves the model's behaviour without the computational cost of full model fine-tuning.
 
-Using both approaches together provides specialised responses while still allowing access to current external knowledge.
+By combining both approaches, the system benefits from improved instruction following while maintaining access to current external knowledge.
 
 ---
 
@@ -281,23 +281,26 @@ Using both approaches together provides specialised responses while still allowi
 
 Fine-tuning should not be the default solution for every AI application.
 
-If the underlying knowledge changes frequently, Retrieval-Augmented Generation is preferable because new documents can simply be indexed without retraining the model.
+If knowledge changes frequently, Retrieval-Augmented Generation is the preferred approach because new documents can simply be indexed without retraining the model.
 
-Fine-tuning is most appropriate when the objective is to improve the model's behaviour, response style, or task-specific capabilities.
+Fine-tuning is most appropriate when the objective is to improve the model's behaviour, response style, or task-specific capabilities rather than introducing new factual knowledge.
 
-For this reason, a hybrid RAG + LoRA approach provides the best balance between maintainability, factual accuracy, and specialised behaviour for this project.
+For this project, a hybrid RAG + LoRA approach provides the best balance between factual accuracy, maintainability, and specialised behaviour.
 
-## Before and After Fine-Tuning Evaluation
+---
 
-To evaluate the effect of LoRA fine-tuning, the behaviour of the original Phi-3 Mini model was compared with the fine-tuned model on representative prompts.
+## Fine-Tuning Evaluation
 
-| Evaluation Aspect     | Base Phi-3 Model              | LoRA Fine-Tuned Model                                      |
-| --------------------- | ----------------------------- | ---------------------------------------------------------- |
-| Instruction following | Correct but generic responses | Better follows the instruction format used during training |
-| Response consistency  | Responses may vary            | More consistent responses for similar prompts              |
-| Task adaptation       | General-purpose responses     | Better aligned with the training examples                  |
-| Knowledge             | Uses pretrained knowledge     | Uses the same pretrained knowledge with improved behaviour |
+The LoRA fine-tuning process was successfully completed, producing a trained adapter with a final training loss of approximately **2.94** after one training epoch.
 
-### Summary
+The objective of the fine-tuning process was to improve the model's instruction-following behaviour rather than introduce new factual knowledge. Since the knowledge available to the model remains unchanged, Retrieval-Augmented Generation continues to be the preferred solution for incorporating new or frequently changing information.
 
-The LoRA fine-tuning primarily improved how the model responds to instructions rather than adding new factual knowledge. This demonstrates that fine-tuning is most effective for adapting model behaviour, while Retrieval-Augmented Generation (RAG) remains the preferred solution for incorporating new and frequently changing information.
+Overall, the project demonstrates that LoRA fine-tuning and RAG solve different problems. Fine-tuning adapts model behaviour, while RAG supplies current external knowledge. Combining both approaches provides a more flexible and effective solution than relying on either technique alone.
+
+# Module 6 – Tool Calling & MCP Improvements
+
+## Improvements Implemented
+
+- Added schema-level validation for `DivideSchema` using a Pydantic `field_validator` to enforce that the divisor cannot be zero.
+- Extended `test_contract.py` with negative validation tests to verify that invalid inputs raise `ValidationError`.
+- Removed debugging artifacts (`test_mcp.py` and the commented-out debug line in `server.py`) to keep the project clean.
