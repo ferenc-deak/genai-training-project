@@ -101,7 +101,7 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 
 ## you should run python train.py from inside the folder to see the training loop
 
-## 🧠 Fixed after feedback and implementations for Module 3
+## 🧠 Module 3 – Transformer Improvements after Assessment Feedback
 
 | Assessment               | Current Project                         | Status                                     |
 | ------------------------ | --------------------------------------- | ------------------------------------------ |
@@ -114,7 +114,7 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 | Multi-head attention     | Not implemented                         | ⚠️ Mentioned as a minor note, not required |
 | Masking                  | Not implemented                         | ⚠️ Mentioned as a minor note, not required |
 
-## Fixed after feedback and implementations for Module 4
+## 🧠 Module 4 – RAG Improvements after Assessment Feedback
 
 ## Chunking Strategy Evaluation
 
@@ -156,3 +156,148 @@ For this reason, the **400/80** configuration was adopted as the final chunking 
 | **Implementation**                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Created a RAG-specific golden dataset (`evaluation/rag_dataset.jsonl`) mapping evaluation queries to their expected document sources. Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against hybrid retrieval using the Recall@5 metric. Added `evaluation/test_rag_regression.py` to verify retrieval behavior remains consistent across future changes and help detect retrieval regressions. |
+
+## Module 5 – Comparison of Prompting, RAG, Fine-Tuning and Hybrid Approaches
+
+## Comparison of AI Approaches
+
+### 1. Prompting
+
+**Advantages**
+
+- Simple to implement.
+- No additional infrastructure or training required.
+- Low deployment cost.
+
+**Disadvantages**
+
+- Limited by the model's existing knowledge.
+- More prone to hallucinations.
+- Cannot learn new domain-specific information.
+
+**Best Use Cases**
+
+- General question answering.
+- Brainstorming.
+- Simple conversational tasks.
+
+---
+
+### 2. Retrieval-Augmented Generation (RAG)
+
+**Advantages**
+
+- Retrieves relevant information from external documents.
+- Provides more accurate and up-to-date answers.
+- Reduces hallucinations by grounding responses in retrieved sources.
+
+**Disadvantages**
+
+- Requires document ingestion and embedding generation.
+- Requires maintaining a vector database.
+- Retrieval quality depends on chunking and ranking strategies.
+
+**Best Use Cases**
+
+- Knowledge bases.
+- Technical documentation.
+- Company policies.
+- Frequently changing information.
+
+---
+
+### 3. Fine-Tuning (LoRA)
+
+**Advantages**
+
+- Learns task-specific behaviour.
+- Produces more consistent responses.
+- LoRA trains only a small number of adapter parameters instead of the full model.
+
+**Disadvantages**
+
+- Requires labelled training data.
+- Requires GPU resources for training.
+- Requires retraining whenever knowledge changes.
+- Does not automatically learn new factual information.
+
+**Best Use Cases**
+
+- Domain-specific assistants.
+- Specialised writing styles.
+- Instruction following.
+- Classification tasks.
+
+---
+
+### 4. Hybrid (RAG + Fine-Tuning)
+
+**Advantages**
+
+- Combines the behavioural improvements of fine-tuning with the factual accuracy of RAG.
+- Provides specialised responses while accessing current external knowledge.
+- Reduces hallucinations while improving task-specific behaviour.
+
+**Disadvantages**
+
+- Highest implementation complexity.
+- Requires maintaining both retrieval infrastructure and LoRA adapters.
+
+**Best Use Cases**
+
+- Production AI assistants.
+- Enterprise knowledge assistants.
+- Applications requiring specialised behaviour and continuously updated information.
+
+---
+
+## Trade-off Analysis
+
+| Criterion                   | Prompting | RAG    | Fine-Tuning            | Hybrid |
+| --------------------------- | --------- | ------ | ---------------------- | ------ |
+| Implementation Complexity   | Low       | Medium | Medium                 | High   |
+| Development Cost            | Low       | Medium | High                   | High   |
+| Training Required           | No        | No     | Yes                    | Yes    |
+| External Knowledge          | No        | Yes    | No                     | Yes    |
+| Learns New Behaviour        | No        | No     | Yes                    | Yes    |
+| Handles Updated Information | No        | Yes    | No                     | Yes    |
+| Response Accuracy           | Medium    | High   | High for trained tasks | High   |
+
+---
+
+## Recommendation
+
+For this project, the recommended approach is a **hybrid solution combining Retrieval-Augmented Generation (RAG) with LoRA fine-tuning**.
+
+The RAG pipeline developed in Module 4 retrieves relevant document chunks using vector similarity search combined with lexical reranking before generating the final response. This allows the system to answer questions using the latest indexed documents without retraining the model whenever the knowledge base changes.
+
+The LoRA fine-tuning implemented in Module 5 adapts the Phi-3 Mini model to better follow the project's instruction format while training only lightweight adapter parameters. This improves the model's behaviour without the computational cost of full model fine-tuning.
+
+Using both approaches together provides specialised responses while still allowing access to current external knowledge.
+
+---
+
+## Decision Rationale
+
+Fine-tuning should not be the default solution for every AI application.
+
+If the underlying knowledge changes frequently, Retrieval-Augmented Generation is preferable because new documents can simply be indexed without retraining the model.
+
+Fine-tuning is most appropriate when the objective is to improve the model's behaviour, response style, or task-specific capabilities.
+
+For this reason, a hybrid RAG + LoRA approach provides the best balance between maintainability, factual accuracy, and specialised behaviour for this project.
+
+## Before and After Fine-Tuning Evaluation
+
+To evaluate the effect of LoRA fine-tuning, the behaviour of the original Phi-3 Mini model was compared with the fine-tuned model on representative prompts.
+
+| Evaluation Aspect     | Base Phi-3 Model              | LoRA Fine-Tuned Model                                      |
+| --------------------- | ----------------------------- | ---------------------------------------------------------- |
+| Instruction following | Correct but generic responses | Better follows the instruction format used during training |
+| Response consistency  | Responses may vary            | More consistent responses for similar prompts              |
+| Task adaptation       | General-purpose responses     | Better aligned with the training examples                  |
+| Knowledge             | Uses pretrained knowledge     | Uses the same pretrained knowledge with improved behaviour |
+
+### Summary
+
+The LoRA fine-tuning primarily improved how the model responds to instructions rather than adding new factual knowledge. This demonstrates that fine-tuning is most effective for adapting model behaviour, while Retrieval-Augmented Generation (RAG) remains the preferred solution for incorporating new and frequently changing information.
