@@ -40,7 +40,7 @@ def test_divide_schema_rejects_zero():
         DivideSchema(a=10, b=0)
 
 
-def test_add_schema_requires_numeric_values():
+def test_add_schema_rejects_invalid_type():
     with pytest.raises(ValidationError):
         AddSchema(a="abc", b=2)
 
