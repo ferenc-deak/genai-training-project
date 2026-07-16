@@ -4,28 +4,36 @@ from app.agents.external import ExternalExecutorAgent
 
 from app.workflow.state_store import StateStore
 from app.core.tracing import TraceLogger
+from app.core.simple_llm import SimpleLLM
 
 
 class WorkflowEngine:
 
     def __init__(self, use_external=False, llm=None):
 
-        # 🔥 inject LLM into planner
-        self.planner = PlannerAgent(llm)
+        # Create a default LLM if one is not provided
+        self.llm = llm or SimpleLLM()
 
-        # A2A boundary (inject same LLM)
+        self.planner = PlannerAgent(self.llm)
+
         if use_external:
-            self.executor = ExternalExecutorAgent(llm)
+            self.executor = ExternalExecutorAgent(self.llm)
         else:
-            self.executor = ExecutorAgent(llm)
+            self.executor = ExecutorAgent(self.llm)
 
         self.store = StateStore()
         self.tracer = TraceLogger()
 
     def run(self, task: str):
 
-        state = self.store.load()
-        state["task"] = task
+        # Start each workflow with a fresh state
+        state = {
+            "task": task,
+            "plan": [],
+            "status": "created",
+            "retrieved_context": "",
+            "results": []
+        }
 
         self.tracer.log("workflow_start", state)
 

@@ -114,193 +114,107 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 | Multi-head attention     | Not implemented                         | ⚠️ Mentioned as a minor note, not required |
 | Masking                  | Not implemented                         | ⚠️ Mentioned as a minor note, not required |
 
-## 🧠 Module 4 – RAG Improvements after Assessment Feedback
-
-## Chunking Strategy Evaluation
-
-To improve retrieval quality, two chunking configurations were evaluated during development using the same document collection (`ai_intro.txt`, `fastapi.txt`, and `rag.txt`).
-
-| Configuration | Chunk Size | Chunk Overlap | Evaluation                                                                                                                                                                      | Outcome  |
-| ------------- | ---------: | ------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| Initial       |        300 |            50 | Produced smaller chunks, but related information was occasionally split across chunk boundaries, resulting in less complete retrieval context.                                  | Rejected |
-| Final         |        400 |            80 | Preserved more contextual information within each chunk while maintaining continuity through overlap. Manual testing showed more complete retrieved passages for RAG responses. | Selected |
-
-### Why the final configuration was chosen
-
-The project initially used a chunk size of **300** with an overlap of **50**. During manual testing, it was observed that some related information was divided between neighbouring chunks, reducing the amount of context returned during retrieval.
-
-The chunk size was then increased to **400** and the overlap to **80**. This allowed more related information to remain within the same chunk while still preserving continuity between adjacent chunks. Testing the same document set showed that retrieved passages contained more complete context, making them more suitable for Retrieval-Augmented Generation (RAG).
-
-For this reason, the **400/80** configuration was adopted as the final chunking strategy and is used by both the indexer and retriever.
-
-## RAG Retrieval & Reranking Improvements
-
-## RAG Implementation Summary
-
-### 1. Reranking / Hybrid Retrieval
-
-| **Requirement**              | **Status**   |
-| ---------------------------- | ------------ |
-| Reranking / Hybrid Retrieval | ✅ Completed |
-
-| **Implementation**                                                                                                                                                                                                                                                                                                                                                                                        |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Implemented a hybrid retrieval approach in `search_docs()`. The retriever over-fetches documents (`k × 2`) using vector similarity search, applies a lexical reranking step based on query-word matches, and returns the top `k` most relevant chunks. The RAG pipeline now uses `search_docs()` directly inside `ask_question()`, ensuring reranked documents are used when generating the final answer. |
-
----
-
-| **Requirement**                                | **Status**   |
-| ---------------------------------------------- | ------------ |
-| Golden Dataset + Regression Tests + Evaluation | ✅ Completed |
-
-| **Implementation**                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Created a RAG-specific golden dataset (`evaluation/rag_dataset.jsonl`) mapping evaluation queries to their expected document sources. Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against hybrid retrieval using the Recall@5 metric. Added `evaluation/test_rag_regression.py` to verify retrieval behavior remains consistent across future changes and help detect retrieval regressions. |
-
-# Module 5 – Comparison of Prompting, RAG, Fine-Tuning and Hybrid Approaches
-
-## Comparison of AI Approaches
-
-### 1. Prompting
-
-**Advantages**
-
-- Simple to implement.
-- No additional infrastructure or training required.
-- Low deployment cost.
-
-**Disadvantages**
-
-- Limited by the model's existing knowledge.
-- More prone to hallucinations.
-- Cannot learn new domain-specific information.
-
-**Best Use Cases**
-
-- General question answering.
-- Brainstorming.
-- Simple conversational tasks.
-
----
-
-### 2. Retrieval-Augmented Generation (RAG)
-
-**Advantages**
-
-- Retrieves relevant information from external documents.
-- Provides more accurate and up-to-date answers.
-- Reduces hallucinations by grounding responses in retrieved sources.
-
-**Disadvantages**
-
-- Requires document ingestion and embedding generation.
-- Requires maintaining a vector database.
-- Retrieval quality depends on chunking and ranking strategies.
-
-**Best Use Cases**
-
-- Knowledge bases.
-- Technical documentation.
-- Company policies.
-- Frequently changing information.
-
----
-
-### 3. Fine-Tuning (LoRA)
-
-**Advantages**
-
-- Learns task-specific behaviour.
-- Produces more consistent responses.
-- LoRA trains only a small number of adapter parameters instead of the full model.
-
-**Disadvantages**
-
-- Requires labelled training data.
-- Requires GPU resources for training.
-- Requires retraining whenever knowledge changes.
-- Does not automatically learn new factual information.
-
-**Best Use Cases**
-
-- Domain-specific assistants.
-- Specialised writing styles.
-- Instruction following.
-- Classification tasks.
-
----
-
-### 4. Hybrid (RAG + Fine-Tuning)
-
-**Advantages**
-
-- Combines the behavioural improvements of fine-tuning with the factual accuracy of RAG.
-- Provides specialised responses while accessing current external knowledge.
-- Reduces hallucinations while improving task-specific behaviour.
-
-**Disadvantages**
-
-- Highest implementation complexity.
-- Requires maintaining both retrieval infrastructure and LoRA adapters.
-
-**Best Use Cases**
-
-- Production AI assistants.
-- Enterprise knowledge assistants.
-- Applications requiring specialised behaviour and continuously updated information.
-
----
-
-## Trade-off Analysis
-
-| Criterion                   | Prompting | RAG    | Fine-Tuning            | Hybrid |
-| --------------------------- | --------- | ------ | ---------------------- | ------ |
-| Implementation Complexity   | Low       | Medium | Medium                 | High   |
-| Development Cost            | Low       | Medium | High                   | High   |
-| Training Required           | No        | No     | Yes                    | Yes    |
-| External Knowledge          | No        | Yes    | No                     | Yes    |
-| Learns New Behaviour        | No        | No     | Yes                    | Yes    |
-| Handles Updated Information | No        | Yes    | No                     | Yes    |
-| Response Accuracy           | Medium    | High   | High for trained tasks | High   |
-
----
-
-## Recommendation
-
-For this project, the recommended approach is a **hybrid solution combining Retrieval-Augmented Generation (RAG) with LoRA fine-tuning**.
-
-The RAG pipeline developed in Module 4 retrieves relevant document chunks using vector similarity search combined with lexical reranking before generating the final response. This enables the system to answer questions using the latest indexed documents without retraining the model whenever the knowledge base changes.
-
-The LoRA fine-tuning implemented in Module 5 adapts the Phi-3 Mini model to better follow the project's instruction format while training only lightweight adapter parameters. This improves the model's behaviour without the computational cost of full model fine-tuning.
-
-By combining both approaches, the system benefits from improved instruction following while maintaining access to current external knowledge.
-
----
-
-## Decision Rationale
-
-Fine-tuning should not be the default solution for every AI application.
-
-If knowledge changes frequently, Retrieval-Augmented Generation is the preferred approach because new documents can simply be indexed without retraining the model.
-
-Fine-tuning is most appropriate when the objective is to improve the model's behaviour, response style, or task-specific capabilities rather than introducing new factual knowledge.
-
-For this project, a hybrid RAG + LoRA approach provides the best balance between factual accuracy, maintainability, and specialised behaviour.
-
----
-
-## Fine-Tuning Evaluation
-
-The LoRA fine-tuning process was successfully completed, producing a trained adapter with a final training loss of approximately **2.94** after one training epoch.
-
-The objective of the fine-tuning process was to improve the model's instruction-following behaviour rather than introduce new factual knowledge. Since the knowledge available to the model remains unchanged, Retrieval-Augmented Generation continues to be the preferred solution for incorporating new or frequently changing information.
-
-Overall, the project demonstrates that LoRA fine-tuning and RAG solve different problems. Fine-tuning adapts model behaviour, while RAG supplies current external knowledge. Combining both approaches provides a more flexible and effective solution than relying on either technique alone.
-
-# Module 6 – Tool Calling & MCP Improvements
+# Module 4 – Retrieval-Augmented Generation (RAG)
 
 ## Improvements Implemented
 
-- Added schema-level validation for `DivideSchema` using a Pydantic `field_validator` to enforce that the divisor cannot be zero.
-- Extended `test_contract.py` with negative validation tests to verify that invalid inputs raise `ValidationError`.
-- Removed debugging artifacts (`test_mcp.py` and the commented-out debug line in `server.py`) to keep the project clean.
+| Improvement                  | Description                                                                                                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Chunking Strategy Evaluation | Evaluated multiple chunking configurations and selected a chunk size of **400** with an overlap of **80** after comparing retrieval quality and contextual completeness. |
+| Hybrid Retrieval & Reranking | Implemented hybrid retrieval by combining vector similarity search with lexical reranking to improve document relevance before answer generation.                        |
+| Golden Dataset Evaluation    | Created a golden evaluation dataset to validate retrieval quality and compare retrieval approaches using Recall@5.                                                       |
+| Regression Testing           | Added automated regression tests to ensure retrieval behaviour remains consistent after future changes to the RAG pipeline.                                              |
+
+---
+
+| Requirement                  | Status       | Implementation                                                                                                                                                                                                                         |
+| ---------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Chunking Strategy            | ✅ Completed | Evaluated different chunk sizes and overlaps, selecting a **400-token chunk size** with **80-token overlap** because it preserved more contextual information while maintaining continuity between chunks.                             |
+| Hybrid Retrieval & Reranking | ✅ Completed | Implemented a hybrid retrieval pipeline in `search_docs()` that over-fetches candidate documents using vector similarity search, applies lexical reranking based on query-term matches, and returns the most relevant document chunks. |
+| RAG Integration              | ✅ Completed | Updated the RAG pipeline so that `ask_question()` retrieves documents through the hybrid retrieval method before generating responses.                                                                                                 |
+| Golden Dataset Evaluation    | ✅ Completed | Created `evaluation/rag_dataset.jsonl` containing evaluation queries mapped to their expected document sources for retrieval evaluation.                                                                                               |
+| Retrieval Evaluation         | ✅ Completed | Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against the hybrid retrieval approach using the Recall@5 evaluation metric.                                                                              |
+| Regression Testing           | ✅ Completed | Implemented `evaluation/test_rag_regression.py` to verify retrieval consistency and detect regressions after future modifications to the retrieval pipeline.                                                                           |
+
+# Module 5 – Comparison of Prompting, RAG, Fine-Tuning and Hybrid Approaches
+
+## Improvements Implemented
+
+| Improvement                                   | Description                                                                                                                                                                      |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompting Analysis                            | Compared prompting as a lightweight approach requiring no additional training or infrastructure while highlighting its limitations regarding hallucinations and fixed knowledge. |
+| Retrieval-Augmented Generation (RAG) Analysis | Evaluated RAG as a retrieval-based solution that improves factual accuracy by grounding responses in external documents while supporting frequently updated knowledge.           |
+| LoRA Fine-Tuning Analysis                     | Analyzed LoRA fine-tuning as an efficient method for improving model behaviour and instruction following using lightweight adapter parameters.                                   |
+| Hybrid Approach Evaluation                    | Compared a hybrid RAG + LoRA solution, demonstrating how retrieval and fine-tuning complement each other to improve both factual accuracy and task-specific behaviour.           |
+
+---
+
+| Requirement            | Status       | Implementation                                                                                                                                     |
+| ---------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompting Comparison   | ✅ Completed | Documented the advantages, disadvantages, and appropriate use cases of prompting as a baseline AI approach.                                        |
+| RAG Comparison         | ✅ Completed | Evaluated Retrieval-Augmented Generation, including its architecture, benefits, limitations, and recommended use cases.                            |
+| Fine-Tuning Comparison | ✅ Completed | Compared LoRA fine-tuning, describing its purpose, strengths, limitations, and applicability to task-specific behaviour.                           |
+| Hybrid Approach        | ✅ Completed | Evaluated a combined RAG + LoRA architecture and explained how it balances behavioural adaptation with external knowledge retrieval.               |
+| Trade-off Analysis     | ✅ Completed | Compared implementation complexity, development cost, training requirements, knowledge updates, and response accuracy across all four approaches.  |
+| Recommendation         | ✅ Completed | Recommended a hybrid RAG + LoRA solution based on the project's requirements for maintainability, factual accuracy, and specialised behaviour.     |
+| Fine-Tuning Evaluation | ✅ Completed | Summarized the LoRA fine-tuning results, including the final training loss and the role of fine-tuning compared to Retrieval-Augmented Generation. |
+
+# Module 6 – Tool Calling & MCP
+
+## Improvements Implemented
+
+| Improvement                | Description                                                                                                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Schema Validation          | Added schema-level validation to `DivideSchema` using a Pydantic `field_validator` to prevent division by zero.                                                                 |
+| Contract Testing           | Extended `test_contract.py` with negative validation tests to verify that invalid tool inputs correctly raise `ValidationError`.                                                |
+| Project Cleanup            | Removed development and debugging artifacts (`test_mcp.py` and commented debug code in `server.py`) to improve project maintainability.                                         |
+| Workflow State Persistence | Implemented persistent workflow state using `StateStore`, ensuring each workflow execution starts with a fresh state while saving the completed state to `workflow_state.json`. |
+
+---
+
+| Requirement            | Status       | Implementation                                                                                                                                                                                                                                             |
+| ---------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tool Schema Validation | ✅ Completed | Implemented schema-level validation using a Pydantic `field_validator` to ensure invalid tool inputs, such as division by zero, are rejected before execution.                                                                                             |
+| Contract Testing       | ✅ Completed | Added positive and negative contract tests to validate tool schemas and verify that invalid inputs raise `ValidationError`.                                                                                                                                |
+| MCP Cleanup            | ✅ Completed | Removed temporary debugging files and commented debugging code to maintain a clean MCP implementation.                                                                                                                                                     |
+| State Persistence      | ✅ Completed | Implemented workflow state persistence using `StateStore`. Each workflow execution initializes a fresh state containing `task`, `plan`, `status`, `retrieved_context`, and `results`, then persists the completed workflow state to `workflow_state.json`. |
+
+# Module 7 – Agentic Workflows & Multi-Agent Systems
+
+## Improvements Implemented
+
+| Improvement                   | Description                                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Workflow State Initialization | Updated `WorkflowEngine` to initialize a fresh workflow state for each execution, preventing stale workflow data from previous runs.            |
+| LLM Dependency Injection      | Updated `run_workflow.py` and `main.py` to inject `SimpleLLM` into `WorkflowEngine`, preventing runtime errors caused by `llm=None`.            |
+| Workflow State Persistence    | Continued using `StateStore` to persist the final workflow state to `workflow_state.json` after execution.                                      |
+| Dynamic RAG Retrieval         | Updated executor agents to retrieve context using the current workflow task instead of a hardcoded query, making the workflow task-independent. |
+
+---
+
+| Requirement             | Status       | Implementation                                                                                                                                                                                               |
+| ----------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Two-Agent Workflow      | ✅ Completed | Implemented a planner–executor workflow using `WorkflowEngine`, where `PlannerAgent` generates an execution plan and `ExecutorAgent` (or `ExternalExecutorAgent`) executes each planned step sequentially.   |
+| State Persistence       | ✅ Completed | Implemented workflow state persistence using `StateStore`. Each workflow execution starts with a fresh workflow state and saves the completed state to `workflow_state.json`.                                |
+| Agent-to-Agent Boundary | ✅ Completed | Implemented interchangeable executor agents through WorkflowEngine, allowing the workflow to switch between a local and external executor implementation while preserving the overall workflow orchestration |
+| Monitoring & Tracing    | ✅ Completed | Implemented structured workflow tracing using TraceLogger, recording workflow lifecycle events (workflow_start, planner_completed, executor_completed, and workflow_finished) in workflow_traces.log.        |
+
+# Module 8 – Hardware Fundamentals (Performance Analysis)
+
+## Improvements Implemented
+
+| Improvement                  | Description                                                                                                                                           |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Real Latency Benchmark       | Replaced the simulated `time.sleep()` latency benchmark with real batched inference using the Phi-3 Mini model and measured actual execution latency. |
+| Real Throughput Benchmark    | Replaced hardcoded throughput and TTFT values with measurements obtained from real model inference and execution timing.                              |
+| Token Speed Benchmark        | Measured token generation speed across multiple context lengths using `model.generate()` on the Phi-3 Mini model.                                     |
+| Benchmark Result Aggregation | Updated `report.py` to aggregate and display the measured outputs generated by the benchmark scripts instead of relying only on static text.          |
+
+---
+
+| Requirement                  | Status       | Implementation                                                                                                                                                                                   |
+| ---------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Latency vs Batch Size        | ✅ Completed | Implemented real latency benchmarking by executing batched inference on the Phi-3 Mini model and measuring execution time for different batch sizes.                                             |
+| Tokens/sec vs Context Length | ✅ Completed | Measured token generation speed across multiple context lengths using real model inference and execution timing.                                                                                 |
+| Throughput vs TTFT           | ✅ Completed | Implemented real throughput and TTFT benchmarking using batched inference and calculated throughput from generated tokens and elapsed execution time.                                            |
+| Performance Analysis         | ✅ Completed | Implemented an aggregated performance report that reads the benchmark outputs from all measurement scripts and summarizes the observed latency, throughput, TTFT, and context-length trade-offs. |

@@ -7,10 +7,9 @@ class ExternalExecutorAgent:
 
         from app.rag.retriever import search_docs
 
-        query = f"""
-login authentication backend debugging error troubleshooting:
-{state.get('task')}
-"""
+        # Retrieve documents relevant to the current workflow task
+        task = state.get("task", "")
+        query = task
 
         docs = search_docs(query)
         context = "\n".join(docs)
@@ -37,6 +36,7 @@ Execute as an external service would.
                 result = self.llm.generate(prompt)
             except Exception as e:
                 result = f"ERROR: {str(e)}"
+
             results.append("[A2A External] " + result)
 
         state["results"] = results

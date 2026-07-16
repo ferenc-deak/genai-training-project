@@ -8,11 +8,16 @@ import sys
 from app.chat import generate_agent
 from app.rag.rag import ask_question
 from app.workflow.workflow import WorkflowEngine
+from app.core.simple_llm import SimpleLLM
 from app.mcp.server import mcp
 
 app = FastAPI()
 
-engine = WorkflowEngine(use_external=True)
+llm = SimpleLLM()
+engine = WorkflowEngine(
+    use_external=True,
+    llm=llm
+)
 
 
 # ---------------- CORS ----------------

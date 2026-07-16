@@ -10,19 +10,18 @@ model = AutoModelForCausalLM.from_pretrained(model_name)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = model.to(device)
 
-context_lengths = [512, 1024, 2048, 4096, 8192]
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model = model.to(device)
 
 print("Device:", device)
 
 context_lengths = [512, 1024, 2048]
 
+results = []
+
 def generate_prompt(n_tokens):
     return "hello " * n_tokens
 
 for ctx in context_lengths:
+
     prompt = generate_prompt(ctx)
 
     inputs = tokenizer(
@@ -45,4 +44,10 @@ for ctx in context_lengths:
     generated_tokens = output.shape[1] - inputs["input_ids"].shape[1]
     tokens_per_sec = generated_tokens / (end - start)
 
-    print(f"Context: {ctx} -> Tokens/sec: {tokens_per_sec:.2f}")
+    line = f"Context: {ctx} -> Tokens/sec: {tokens_per_sec:.2f}"
+
+    print(line)
+    results.append(line)
+
+with open("token_speed_results.txt", "w") as file:
+    file.write("\n".join(results))
