@@ -57,12 +57,15 @@ No markdown.
 User input:
 {prompt}
 """
+        
+    # Use deterministic output for evaluation
+    temperature = 0 if mode == "eval" else 0.2
 
     response = client.chat.completions.create(
         model="meta-llama/Llama-3.1-8B-Instruct",
         messages=[{"role": "user", "content": structured_prompt}],
         max_tokens=300,
-        temperature=0.2
+        temperature=temperature
     )
 
     return response.choices[0].message.content.strip()
