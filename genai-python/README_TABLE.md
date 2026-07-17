@@ -127,14 +127,13 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 
 ---
 
-| Requirement                  | Status       | Implementation                                                                                                                                                                                                                         |
-| ---------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Chunking Strategy            | ✅ Completed | Evaluated different chunk sizes and overlaps, selecting a **400-token chunk size** with **80-token overlap** because it preserved more contextual information while maintaining continuity between chunks.                             |
+| Requirement | Status | Implementation |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Chunking Strategy | ✅ Completed | Evaluated different chunk sizes and overlaps, selecting a **400-token chunk size** with **80-token overlap** because it preserved more contextual information while maintaining continuity between chunks. |
 | Hybrid Retrieval & Reranking | ✅ Completed | Implemented a hybrid retrieval pipeline in `search_docs()` that over-fetches candidate documents using vector similarity search, applies lexical reranking based on query-term matches, and returns the most relevant document chunks. |
-| RAG Integration              | ✅ Completed | Updated the RAG pipeline so that `ask_question()` retrieves documents through the hybrid retrieval method before generating responses.                                                                                                 |
-| Golden Dataset Evaluation    | ✅ Completed | Created `evaluation/rag_dataset.jsonl` containing evaluation queries mapped to their expected document sources for retrieval evaluation.                                                                                               |
-| Retrieval Evaluation         | ✅ Completed | Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against the hybrid retrieval approach using the Recall@5 evaluation metric.                                                                              |
-| Regression Testing           | ✅ Completed | Implemented `evaluation/test_rag_regression.py` to verify retrieval consistency and detect regressions after future modifications to the retrieval pipeline.                                                                           |
+| RAG Integration | ✅ Completed | Updated the RAG pipeline so that `ask_question()` retrieves documents through the hybrid retrieval method before generating responses. |
+| Golden Dataset Evaluation | ✅ Completed | Created `evaluation/rag_dataset.jsonl` containing evaluation queries mapped to their expected document sources for retrieval evaluation. |
+| Retrieval Evaluation | ✅ Completed | Implemented `evaluation/evaluate_rag.py` to compare baseline vector retrieval against the hybrid retrieval approach using the Recall@5 evaluation metric. |
+| Regression Testing | ✅ Completed | Implemented `evaluation/test_rag_regression.py` to verify retrieval consistency and detect regressions after future modifications to the retrieval pipeline. |
 
 # Module 5 – Comparison of Prompting, RAG, Fine-Tuning and Hybrid Approaches
 
@@ -172,12 +171,11 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 
 ---
 
-| Requirement            | Status       | Implementation                                                                                                                                                                                                                                             |
-| ---------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tool Schema Validation | ✅ Completed | Implemented schema-level validation using a Pydantic `field_validator` to ensure invalid tool inputs, such as division by zero, are rejected before execution.                                                                                             |
-| Contract Testing       | ✅ Completed | Added positive and negative contract tests to validate tool schemas and verify that invalid inputs raise `ValidationError`.                                                                                                                                |
-| MCP Cleanup            | ✅ Completed | Removed temporary debugging files and commented debugging code to maintain a clean MCP implementation.                                                                                                                                                     |
-| State Persistence      | ✅ Completed | Implemented workflow state persistence using `StateStore`. Each workflow execution initializes a fresh state containing `task`, `plan`, `status`, `retrieved_context`, and `results`, then persists the completed workflow state to `workflow_state.json`. |
+| Requirement | Status | Implementation || ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tool Schema Validation | ✅ Completed | Implemented schema-level validation using a Pydantic `field_validator` to ensure invalid tool inputs, such as division by zero, are rejected before execution. |
+| Contract Testing | ✅ Completed | Added positive and negative contract tests to validate tool schemas and verify that invalid inputs raise `ValidationError`. |
+| MCP Cleanup | ✅ Completed | Removed temporary debugging files and commented debugging code to maintain a clean MCP implementation. |
+| State Persistence | ✅ Completed | Implemented workflow state persistence using `StateStore`. Each workflow execution initializes a fresh state containing `task`, `plan`, `status`, `retrieved_context`, and `results`, then persists the completed workflow state to `workflow_state.json`. |
 
 # Module 7 – Agentic Workflows & Multi-Agent Systems
 
@@ -218,3 +216,14 @@ This project is a modular AI system including RAG, tools (MCP), agents, evaluati
 | Tokens/sec vs Context Length | ✅ Completed | Measured token generation speed across multiple context lengths using real model inference and execution timing.                                                                                 |
 | Throughput vs TTFT           | ✅ Completed | Implemented real throughput and TTFT benchmarking using batched inference and calculated throughput from generated tokens and elapsed execution time.                                            |
 | Performance Analysis         | ✅ Completed | Implemented an aggregated performance report that reads the benchmark outputs from all measurement scripts and summarizes the observed latency, throughput, TTFT, and context-length trade-offs. |
+
+# Module 9 — Evaluation, Reliability & Safety (Capstone)
+
+## Improvements Implemented
+
+| Requirement               | Status | Implementation                                                                                                |
+| ------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| RAG Regression Testing    | ✅     | Added automated regression tests validating grounded answers, expected sources and unknown-question handling. |
+| Prompt Injection Testing  | ✅     | Added automated tests for instruction override, administrator privilege abuse and malicious prompt injection. |
+| Agent Workflow Regression | ✅     | Replaced smoke test with assertion-based workflow validation.                                                 |
+| Deterministic Evaluation  | ✅     | Evaluation mode now uses temperature=0 for reproducible outputs.                                              |

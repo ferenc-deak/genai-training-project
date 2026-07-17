@@ -76,7 +76,9 @@ def evaluate():
                 correct += 1
 
     accuracy = correct / total if total > 0 else 0
-    print("\nFINAL ACCURACY:", accuracy)
+    print(f"Correct: {correct}")
+    print(f"Total: {total}")
+    print(f"Accuracy: {accuracy:.2%}")
 
 
 if __name__ == "__main__":
